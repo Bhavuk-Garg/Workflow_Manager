@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+    <form th:fragment="taskNameForm" class="container" method="post">
+        <select class="form-control" name="name">
+            <option th:each="taskName:${allowedTaskNames}" th:value="${taskName}" th:text="${taskName}">
+            </option>
+        </select>
+        <button type="submit btn btn-primary">Submit</button>
+    </form>
+
+
+</body>
+</html>

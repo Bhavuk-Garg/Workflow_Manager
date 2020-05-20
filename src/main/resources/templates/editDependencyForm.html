@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
+
+    <div th:replace="fragments/common :: header"></div>
+
+    <form method="post"  th:object="${taskDependencyDTO}">
+        <div class="input-group">
+            <input th:field="*{fromTask}" type="number" class="form-control" placeholder="FROM TASK(int)"/>
+            <div th:if="${#fields.hasErrors('fromTask')}" th:errors="*{fromTask}"></div>
+
+            <input th:field="*{output}" type="text" class="form-control" placeholder="OUTPUT"/>
+            <div th:if="${#fields.hasErrors('output')}" th:errors="*{output}"></div>
+
+            <input th:field="*{toTask}" type="number" class="form-control" placeholder="TO TASK(int)"/>
+            <div th:if="${#fields.hasErrors('toTask')}" th:errors="*{toTask}"></div>
+
+        </div>
+        <button type="submit">EDIT</button>
+    </form>
+
+    <div th:replace="fragments/common:: footer"></div>
+</body>
+</html>

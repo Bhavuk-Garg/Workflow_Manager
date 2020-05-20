@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
+
+    <div th:replace="fragments/common :: header"></div>
+
+    <div th:insert="fragments/form:: taskNameForm"></div>
+
+<div class="container">
+        <div class="row">
+            <div class="col-4 p-3 m-2 bg-primary text-white">Task ID</div>
+            <div class="col-4 p-3 m-2 bg-primary text-white">Task Name</div>
+        </div>
+        <div class="row align-items-center" th:each="task: ${availableTaskList}" >
+                <div class="col-4 p-3 m-2 bg-info text-white"><span th:text="${task.id}"></span></div>
+                <div class="col-4 p-3 m-2 bg-info text-white"><span th:text="${task.name}"></span></div>
+                <a class="p-3 m-2 bg-warning text-decoration-none" th:href="@{'/editTaskName/'+${task.id}}">Edit</a>
+        </div>
+
+    </div>
+
+    <div th:replace="fragments/common:: footer"></div>
+</body>
+</html>

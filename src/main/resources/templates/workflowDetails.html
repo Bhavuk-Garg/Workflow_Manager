@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
+    <div th:switch="${workflow.status}" class="container text-center">
+
+        <div  th:case="${T(com.mysqlExample.kuroko.database.model.Status).Waiting}" class="display-3">
+            Please Wait for the execution to complete
+        </div>
+
+        <div th:case="*">
+            <div class="row">
+                <div class="col-6">Task Executed</div>
+                <div class="col-6">Output Generated</div>
+            </div>
+
+            <div th:each="output,status : ${#strings.arraySplit(workflow.result, ';')}" class="row">
+                <div th:text="${#strings.arraySplit(output,',')[0]}" class="col-6"></div>
+                <div th:text="${#strings.arraySplit(output,',')[1]}" class="col-6"></div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

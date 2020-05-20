@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
+    <div th:replace="fragments/common :: header"></div>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <a class="p-3 m-2 bg-secondary text-white text-decoration-none" href="/allNames">Task Names</a>
+            <a class="p-3 m-2 bg-secondary text-white text-decoration-none" href="/allDependencies">Task Dependencies</a>
+      </div>
+    </div>
+
+    <form method="post">
+        <div class="form-row justify-content-center">
+            <div class="col-6">
+                <input name="name" type="text" class="form-control" id="wfName" placeholder="workflow name" required>
+            </div>
+            <button type="submit" class="btn btn-success">Execute</button>
+        </div>
+
+    </form>
+
+    <table class="table container justify-content-center">
+        <tbody>
+            <tr class="row" th:each="workflow,status : ${savedWorkflows}">
+                <td class="col-4" th:text="${status.count}"></td>
+                <td class="col-4" th:text="${workflow.name}"></td>
+                <td class="col-4"><a th:href="@{'/workflow/'+${workflow.name}}">check status</a></td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <div th:replace="fragments/common:: footer"></div>
+</body>
+</html>
