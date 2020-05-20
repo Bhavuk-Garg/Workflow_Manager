@@ -8,8 +8,10 @@
 <body>
 
     <div th:replace="fragments/common :: header"></div>
+    <div th:replace="fragments/form::taskDependencyForm"></div>
 
-<div class="container text-white text-center">
+
+    <div class="container text-white text-center">
         <div class="row">
             <div class="col col-sm-2 p-3 m-2 bg-primary">ID</div>
             <div class="col col-sm-2 p-3 m-2 bg-primary">FROM TASK</div>
@@ -24,21 +26,6 @@
             <a class="col col-sm-1 p-3 m-2 bg-warning" th:href="@{'/editDependency/'+${dependency.id}}">Edit</a>
         </div>
     </div>
-    <form method="post"  th:object="${taskDependencyDTO}">
-        <div class="input-group">
-            <input th:field="*{fromTask}" type="number" class="form-control" placeholder="FROM TASK(int)"/>
-            <div th:if="${#fields.hasErrors('fromTask')}" th:errors="*{fromTask}"></div>
-
-            <input th:field="*{output}" type="text" class="form-control" placeholder="OUTPUT"/>
-            <div th:if="${#fields.hasErrors('output')}" th:errors="*{output}"></div>
-
-            <input th:field="*{toTask}" type="number" class="form-control" placeholder="TO TASK(int)"/>
-            <div th:if="${#fields.hasErrors('toTask')}" th:errors="*{toTask}"></div>
-
-        </div>
-        <button type="submit">Add</button>
-    </form>
-
 
     <div th:replace="fragments/common:: footer"></div>
 </body>
