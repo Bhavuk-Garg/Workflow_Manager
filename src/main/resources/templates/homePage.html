@@ -30,7 +30,7 @@
             <tr class="row" th:each="workflow,status : ${savedWorkflows}">
                 <td class="col-4" th:text="${status.count}"></td>
                 <td class="col-4" th:text="${workflow.name}"></td>
-                <td class="col-4"><a th:href="@{'/workflow/'+${workflow.name}}">check status</a></td>
+                <td class="col-4"><a class="text-decoration-none" th:href="@{'/workflow/'+${workflow.name}}">link</a></td>
             </tr>
         </tbody>
     </table>

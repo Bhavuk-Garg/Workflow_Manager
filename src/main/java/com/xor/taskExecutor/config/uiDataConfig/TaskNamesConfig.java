@@ -10,7 +10,7 @@ import java.util.List;
 
 @Configuration
 @PropertySource("classpath:dropdownTasks.properties")
-public class TaskDropdownConfig {
+public class TaskNamesConfig {
     @Value("#{'${dropdownvalue.availableTaskNames}'.split(',')}")
     private List<String> allowedTaskNames;
 

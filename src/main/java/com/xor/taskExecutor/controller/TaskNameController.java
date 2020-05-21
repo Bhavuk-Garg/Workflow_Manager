@@ -1,7 +1,7 @@
 package com.xor.taskExecutor.controller;
 
 import com.xor.taskExecutor.database.model.TaskNameEntity;
-import com.xor.taskExecutor.config.uiDataConfig.TaskDropdownConfig;
+import com.xor.taskExecutor.config.uiDataConfig.TaskNamesConfig;
 import com.xor.taskExecutor.service.TaskNameService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import java.util.List;
 @Slf4j
 public class TaskNameController {
     @Autowired
-    TaskDropdownConfig taskDropdownConfig;
+    TaskNamesConfig taskDropdownConfig;
 
     @Autowired
     TaskNameService taskNameService;

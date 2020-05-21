@@ -45,6 +45,7 @@ public class TaskDependencyController {
 
     @GetMapping("/editDependency/{id}")
     public String getEditDependencyPage(){
+        System.out.println("It hit the URL");
         return "editDependencyForm";
     }
 

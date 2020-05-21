@@ -1,7 +1,5 @@
 package com.xor.taskExecutor.config.beanConfig;
 
-import com.mysqlExample.kuroko.Task.*;
-import com.mysqlExample.taskExecutor.Task.*;
 import com.xor.taskExecutor.Task.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

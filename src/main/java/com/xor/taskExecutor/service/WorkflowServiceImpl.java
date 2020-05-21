@@ -1,8 +1,8 @@
 package com.xor.taskExecutor.service;
 
 import com.xor.taskExecutor.Task.Task;
-import com.xor.taskExecutor.config.beanConfig.Graph;
-import com.xor.taskExecutor.database.model.Status;
+import com.xor.taskExecutor.util.Graph;
+import com.xor.taskExecutor.util.Status;
 import com.xor.taskExecutor.database.model.TaskNameEntity;
 import com.xor.taskExecutor.database.model.Workflow;
 import com.xor.taskExecutor.database.repository.TaskNameRepository;
@@ -38,20 +38,24 @@ public class WorkflowServiceImpl implements WorkflowService {
     @Async
     public void executeWorkflow(Workflow inputWorkflow)  {
         Graph graph=applicationContext.getBean("dependencyGraph",Graph.class);
-        String res=dfs(1,graph);
-        System.out.println(res);
+        String res=execute(1,graph);
+
         updateStatus(inputWorkflow,res);
         workflowRepository.save(inputWorkflow);
     }
 
     private void updateStatus(Workflow inputWorkflow, String res) {
+        /*
+        *   A successful execution returns result ending with "X"
+        *   Unsuccessful execution ends with "Exception"
+         */
         if(res.endsWith("X"))
             inputWorkflow.setStatus(Status.Success);
         else    inputWorkflow.setStatus(Status.Failed);
         inputWorkflow.setResult(res);
     }
 
-    String dfs(int curTaskId,Graph graph) {
+    String execute(int curTaskId,Graph graph) {
         List<Pair<Integer,String>> edges=graph.getEdges(curTaskId);
 
         //Base Case for Leaf Node
@@ -59,23 +63,24 @@ public class WorkflowServiceImpl implements WorkflowService {
 
         Task curTask=getTask(curTaskId);
         String output=curTask.execute();
-        System.out.println("at node: "+curTaskId+" got output "+output);
+//        System.out.println("at node: "+curTaskId+" got output "+output);
         for(Pair<Integer,String> edge: edges)
             if(edge.getValue().equals(output))
-                return curTaskId+","+output+";"+dfs(edge.getKey(),graph);
+                return curTaskId+","+output+";"+execute(edge.getKey(),graph);
 
         for(Pair<Integer,String> edge:edges)
             if(edge.getValue().equals(""))
-                return curTaskId+",;"+dfs(edge.getKey(),graph);
-         //Take this output as exception
+                return curTaskId+",;"+execute(edge.getKey(),graph);
+
+        //If no edge matches take it as exception
         return curTaskId+","+"Exception"+";";
     }
 
     private Task getTask(int curTaskId) {
-        TaskNameEntity taskDbInstance=taskNameRepository.findById(curTaskId).orElse(null);
-        if(taskDbInstance==null)    throw new RuntimeException("ID "+curTaskId+" have no instance in database");
+        TaskNameEntity taskNameEntity=taskNameRepository.findById(curTaskId).orElse(null);
+        if(taskNameEntity==null)    throw new RuntimeException("TaskName ID: "+curTaskId+" do not exist in database");
 
-        return applicationContext.getBean(taskDbInstance.getName(),Task.class);
+        return applicationContext.getBean(taskNameEntity.getName(),Task.class);
     }
 
     @Override

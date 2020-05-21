@@ -6,21 +6,23 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
 <body>
+    <div th:replace="fragments/common :: header"></div>
+
     <div th:switch="${workflow.status}" class="container text-center">
 
-        <div  th:case="${T(com.mysqlExample.kuroko.database.model.Status).Waiting}" class="display-3">
-            Please Wait for the execution to complete
+        <div  th:case="${T(com.xor.taskExecutor.util.Status).Waiting}" class="display-3">
+            Please Wait for the execution to complete...
         </div>
 
         <div th:case="*">
             <div class="row">
-                <div class="col-6">Task Executed</div>
-                <div class="col-6">Output Generated</div>
+                <div class="col-5  m-2 p-3">Task </div>
+                <div class="col-5  m-2 p-3">Status</div>
             </div>
 
-            <div th:each="output,status : ${#strings.arraySplit(workflow.result, ';')}" class="row">
-                <div th:text="${#strings.arraySplit(output,',')[0]}" class="col-6"></div>
-                <div th:text="${#strings.arraySplit(output,',')[1]}" class="col-6"></div>
+            <div th:each="path,status : ${formattedResult}" class="row text-white">
+                      <div th:text="${path.getKey()}" class="col-5 bg-info m-2 p-3"></div>
+                      <div th:text="${path.getValue()}" class="col-5 bg-info m-2 p-3"></div>
             </div>
 
         </div>
