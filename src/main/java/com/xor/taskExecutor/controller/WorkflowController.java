@@ -28,7 +28,7 @@ public class WorkflowController {
         model.addAttribute("workflow",workflowInstance);
 
         if(workflowInstance.getStatus()!= Status.Waiting) {
-            List<Pair<Integer, String>> formattedResult = getFormattedResult(workflowInstance.getResult());
+            List<Pair<Integer, String>> formattedResult = workflowService.getFormattedResult(workflowInstance.getResult());
             System.out.println(formattedResult);
             model.addAttribute("formattedResult", formattedResult);
         }
@@ -36,27 +36,5 @@ public class WorkflowController {
         return "workflowDetails";
     }
 
-    private List<Pair<Integer, String>> getFormattedResult(String res) {
-            List<Pair<Integer, String>> formatResult=new ArrayList<>();
-            String []executionPaths=res.split(";");
-        System.out.println(Arrays.toString(executionPaths));
-            for(String s: executionPaths)
-            {
-                String []executionUnit=s.split(",");
-                String pathTaken="";
-                if(executionUnit.length == 1)
-                    pathTaken="Default Path Taken";
-                else if(executionUnit[1].equals("X"))
-                    pathTaken="Successfully Terminated";
-                else if(executionUnit[1].equals("Exception"))
-                    pathTaken="Caught Exception Failed to Execute";
-                else
-                    pathTaken="Output Generated "+executionUnit[1];
 
-                formatResult.add(new MutablePair<Integer, String>(Integer.parseInt(executionUnit[0]),pathTaken));
-
-            }
-//            System.out.println(returnValue);
-            return formatResult;
-    }
 }

@@ -54,4 +54,14 @@ public class TaskDependency {
     public void setToTask(TaskNameEntity toTask) {
         this.toTask = toTask;
     }
+
+    @Override
+    public String toString() {
+        return "TaskDependency{" +
+                "id=" + id +
+                ", fromTask=" + fromTask +
+                ", output='" + output + '\'' +
+                ", toTask=" + toTask +
+                '}';
+    }
 }

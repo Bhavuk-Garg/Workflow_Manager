@@ -10,4 +10,5 @@ import java.util.List;
 public interface TaskDependencyRepository extends CrudRepository<TaskDependency,Integer> {
     int countByFromTaskIdAndToTaskId(int fromTaskId,int toTaskId);
     List<TaskDependency> findByOutput(String output);
+    List<TaskDependency> findByFromTaskId(int fromId);
 }

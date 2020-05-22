@@ -3,6 +3,7 @@ package com.xor.taskExecutor.Task;
 import com.xor.taskExecutor.util.RandomOutput;
 
 public class SyncTask implements Task {
+    String outputValues[];
     @Override
     public String execute() {
         try {
