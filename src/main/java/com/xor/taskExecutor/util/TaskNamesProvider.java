@@ -1,23 +1,19 @@
-package com.xor.taskExecutor.config.uiDataConfig;
+package com.xor.taskExecutor.util;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Configuration
+@Component
 @PropertySource("classpath:dropdownTasks.properties")
-public class TaskNamesConfig {
+public class TaskNamesProvider {
     @Value("#{'${dropdownvalue.availableTaskNames}'.split(',')}")
     private List<String> allowedTaskNames;
-
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-        return new PropertySourcesPlaceholderConfigurer();
-    }
 
     public List<String> getAllowedTaskNames() {
         return allowedTaskNames;

@@ -1,7 +1,9 @@
 package com.xor.taskExecutor.Task;
 
 import com.xor.taskExecutor.util.RandomOutput;
+import org.springframework.stereotype.Component;
 
+@Component("dataTask")
 public class DatabaseTask implements Task {
     @Override
     public String execute() {

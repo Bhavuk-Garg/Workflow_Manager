@@ -1,7 +1,9 @@
 package com.xor.taskExecutor.Task;
 
 import com.xor.taskExecutor.util.RandomOutput;
+import org.springframework.stereotype.Component;
 
+@Component("printTask")
 public class PrintTask implements Task {
     public String execute()
     {
