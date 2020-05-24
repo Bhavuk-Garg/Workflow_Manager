@@ -1,9 +1,6 @@
 package com.xor.taskExecutor.controller;
 
-import com.xor.taskExecutor.config.beanConfig.DependencyGraphBean;
 import com.xor.taskExecutor.database.model.Workflow;
-import com.xor.taskExecutor.database.repository.TaskDependencyRepository;
-import com.xor.taskExecutor.database.repository.WorkflowRepository;
 import com.xor.taskExecutor.service.WorkflowService;
 import com.xor.taskExecutor.util.Graph;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,18 +13,20 @@ import org.springframework.web.bind.annotation.*;
 public class MainController {
     @Autowired
     WorkflowService workflowService;
-
+    @Autowired
+    ApplicationContext ctx;
 
     @GetMapping(value={"/","/home"})
-    public String getHomepage(Model model){
-       model.addAttribute("savedWorkflows",workflowService.findAll());
+    public String getHomepage(Model model,@RequestParam(defaultValue = "") String searchWorkflow){
+        System.out.println("Hit Main Get Request with search: "+searchWorkflow);
+       model.addAttribute("savedWorkflows",workflowService.findByNameLike(searchWorkflow));
         return "homePage";
     }
 
     @PostMapping(value={"/","/home"})
-    public String postWorkflow(@RequestParam String name) throws IllegalAccessException {
+    public String postWorkflow(@RequestParam("name") String inputWorkflowName) throws IllegalAccessException {
         Workflow inputWorkflow=new Workflow();
-        inputWorkflow.setName(name);
+        inputWorkflow.setName(inputWorkflowName);
         /*
         *   Create a default entry with Waiting Status
          */

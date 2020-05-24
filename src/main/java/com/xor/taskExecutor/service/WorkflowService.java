@@ -11,4 +11,5 @@ public interface WorkflowService {
     void executeWorkflow(Workflow inputWorkflow) throws IllegalAccessException;
     Workflow findByName(String name);
     List<Pair<Integer, String>> getFormattedResult(String res);
+    List<Workflow> findByNameLike(String name);
 }

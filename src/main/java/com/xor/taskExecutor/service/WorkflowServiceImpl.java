@@ -65,27 +65,26 @@ public class WorkflowServiceImpl implements WorkflowService {
         //Base Case for Leaf Node
         if(edges==null)  return curTaskId+","+"X";
 
-        Task curTask=getTask(curTaskId);
-        String output=curTask.execute();
-//        System.out.println("at node: "+curTaskId+" got output "+output);
-        for(Pair<Integer,String> edge: edges)
-            if(edge.getValue().equals(output))
-                return curTaskId+","+output+";"+execute(edge.getKey(),graph);
+        Task curTask=graph.getTask(curTaskId);
+        String output;
+        try
+        {
+            output=curTask.execute();
+        }catch (Exception e)
+        {
+            return curTaskId+","+"Exception"+";";
+        }
 
-        for(Pair<Integer,String> edge:edges)
-            if(edge.getValue().equals(""))
-                return curTaskId+",;"+execute(edge.getKey(),graph);
+        System.out.println("Output: "+output);
+             for(Pair<Integer,String> edge: edges)
+             {
+                 System.out.print("edge: "+edge.getValue());
+                 if(edge.getValue().equals(output))
+                     return curTaskId+","+output+";"+execute(edge.getKey(),graph);
+             }
 
-        //If no edge matches take it as exception
-        System.out.println("no edge from "+curTaskId+" with output: "+output);
-        return curTaskId+","+"Exception"+";";
-    }
-
-    private Task getTask(int curTaskId) {
-        TaskNameEntity taskNameEntity=taskNameRepository.findById(curTaskId).orElse(null);
-        if(taskNameEntity==null)    throw new RuntimeException("TaskName ID: "+curTaskId+" do not exist in database");
-
-        return applicationContext.getBean(taskNameEntity.getName(),Task.class);
+        System.out.println("for task : "+curTask+" output generated: "+output);
+            return "something went wrong";
     }
 
 
@@ -110,6 +109,11 @@ public class WorkflowServiceImpl implements WorkflowService {
 
         }
         return formatResult;
+    }
+
+    @Override
+    public List<Workflow> findByNameLike(String name) {
+        return workflowRepository.findByNameLike("%"+name+"%");
     }
 
     @Override

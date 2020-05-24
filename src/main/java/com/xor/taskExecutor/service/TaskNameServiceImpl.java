@@ -27,4 +27,9 @@ public class TaskNameServiceImpl implements TaskNameService{
         taskNameRepository.save(inputTaskNameEntity);
     }
 
+    @Override
+    public TaskNameEntity findById(int id) {
+        return taskNameRepository.findById(id).orElse(null);
+    }
+
 }

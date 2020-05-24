@@ -27,6 +27,13 @@
 
     </form>
 
+    <form class="container my-4">
+        <div class="d-flex justify-content-end">
+            <input name="searchWorkflow" type="text" placeholder="search"/>
+            <button type="submit" class="btn btn-success">Search</button>
+        </div>
+    </form>
+
     <table class="table container justify-content-center">
         <tbody>
             <tr class="row" th:each="workflow,status : ${savedWorkflows}">

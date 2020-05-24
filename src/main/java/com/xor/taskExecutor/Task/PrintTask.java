@@ -1,10 +1,13 @@
 package com.xor.taskExecutor.Task;
 
 import com.xor.taskExecutor.util.RandomOutput;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component("printTask")
-public class PrintTask implements Task {
+@Scope("prototype")
+public class PrintTask extends Task {
+
     public String execute()
     {
         try {
@@ -13,6 +16,6 @@ public class PrintTask implements Task {
             e.printStackTrace();
         }
         System.out.println("print task executed");
-        return RandomOutput.getOutput();
+        return generateOutput();
     }
 }

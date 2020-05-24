@@ -6,4 +6,5 @@ public interface TaskNameService {
     Iterable<TaskNameEntity> getTaskNameEntities();
     void save(TaskNameEntity taskNameEntity);
     void override(int id,String inputTaskName);
+    TaskNameEntity findById(int id);
 }

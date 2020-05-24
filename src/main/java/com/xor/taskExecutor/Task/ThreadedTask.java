@@ -1,10 +1,13 @@
 package com.xor.taskExecutor.Task;
 
 import com.xor.taskExecutor.util.RandomOutput;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component("threadedTask")
-public class ThreadedTask implements Task{
+@Scope("prototype")
+public class ThreadedTask extends Task{
+
     @Override
     public String execute() {
         try {
@@ -13,6 +16,6 @@ public class ThreadedTask implements Task{
             e.printStackTrace();
         }
         System.out.println("Threaded Task Executed");
-        return RandomOutput.getOutput();
+        return generateOutput();
     }
 }

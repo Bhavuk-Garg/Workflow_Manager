@@ -1,11 +1,13 @@
 package com.xor.taskExecutor.Task;
 
 import com.xor.taskExecutor.util.RandomOutput;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component("syncTask")
-public class SyncTask implements Task {
-    String outputValues[];
+@Scope("prototype")
+public class SyncTask extends Task {
+
     @Override
     public String execute() {
         try {
@@ -14,6 +16,6 @@ public class SyncTask implements Task {
             e.printStackTrace();
         }
         System.out.println("Sync Task Executed");
-        return RandomOutput.getOutput();
+        return generateOutput();
     }
 }

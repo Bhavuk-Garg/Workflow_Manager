@@ -7,6 +7,8 @@ import com.xor.taskExecutor.dto.TaskDependencyDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class TaskDependencyServieImpl implements TaskDependencyService{
     @Autowired
@@ -51,5 +53,10 @@ public class TaskDependencyServieImpl implements TaskDependencyService{
         TaskDependency newDependency=createEntityFromDTO(inputDTO);
         newDependency.setId(id);
         taskDependencyRepository.save(newDependency);
+    }
+
+    @Override
+    public List<TaskDependency> findDependentEntriesById(int id) {
+        return taskDependencyRepository.findByFromTaskId(id);
     }
 }

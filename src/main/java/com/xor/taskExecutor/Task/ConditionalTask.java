@@ -1,10 +1,13 @@
 package com.xor.taskExecutor.Task;
 
 import com.xor.taskExecutor.util.RandomOutput;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component("conditionalTask")
-public class ConditionalTask implements Task {
+@Scope("prototype")
+public class ConditionalTask extends Task {
+
     @Override
     public String execute() {
         try {
@@ -13,6 +16,6 @@ public class ConditionalTask implements Task {
             e.printStackTrace();
         }
         System.out.println("conditional task Executed");
-        return RandomOutput.getOutput();
+        return generateOutput();
     }
 }

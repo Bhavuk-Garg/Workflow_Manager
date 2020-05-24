@@ -1,10 +1,13 @@
 package com.xor.taskExecutor.Task;
 
 import com.xor.taskExecutor.util.RandomOutput;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component("dataTask")
-public class DatabaseTask implements Task {
+@Scope("prototype")
+public class DatabaseTask extends Task {
+
     @Override
     public String execute() {
         try {
@@ -13,6 +16,6 @@ public class DatabaseTask implements Task {
             e.printStackTrace();
         }
         System.out.println("DataBase Task Executed");
-        return RandomOutput.getOutput();
+        return generateOutput();
     }
 }

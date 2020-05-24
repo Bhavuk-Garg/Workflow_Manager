@@ -11,21 +11,16 @@ import org.springframework.context.annotation.Scope;
 @Configuration
 public class DependencyGraphBean {
 
-    @Autowired
-    TaskDependencyService taskDependencyService;
-
-    @Bean("dependencyGraph")
+//
+//    @Autowired
+//    Graph dependencyGraph;
+//
+//    @Bean("dependencyGraph")
 //    @Scope("prototype")
-    public Graph getDependencyGraph(){
-        Graph dependencyGraph=new Graph();
-        Iterable<TaskDependency> dependencies= taskDependencyService.getAllDependencies();
-        for(TaskDependency dependency : dependencies)
-        {
-            int from=dependency.getFromTask().getId();
-            int to=dependency.getToTask().getId();
-            String output=dependency.getOutput();
-            dependencyGraph.addEdge(from,to,output);
-        }
-        return dependencyGraph;
-    }
+//    public Graph getDependencyGraph(){
+//
+//
+//        System.out.println(dependencyGraph.taskMapping);
+//        return dependencyGraph;
+//    }
 }
