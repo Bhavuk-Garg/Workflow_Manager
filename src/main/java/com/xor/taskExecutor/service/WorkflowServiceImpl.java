@@ -1,9 +1,8 @@
 package com.xor.taskExecutor.service;
 
 import com.xor.taskExecutor.Task.Task;
-import com.xor.taskExecutor.util.Graph;
+import com.xor.taskExecutor.util.DependencyGraph;
 import com.xor.taskExecutor.util.Status;
-import com.xor.taskExecutor.database.model.TaskNameEntity;
 import com.xor.taskExecutor.database.model.Workflow;
 import com.xor.taskExecutor.database.repository.TaskNameRepository;
 import com.xor.taskExecutor.database.repository.WorkflowRepository;
@@ -41,8 +40,8 @@ public class WorkflowServiceImpl implements WorkflowService {
     @Override
     @Async
     public void executeWorkflow(Workflow inputWorkflow)  {
-        Graph graph=applicationContext.getBean("dependencyGraph",Graph.class);
-        String res=execute(1,graph);
+        DependencyGraph dependencyGraph =applicationContext.getBean("dependencyGraph", DependencyGraph.class);
+        String res=execute(1, dependencyGraph);
 
         updateStatus(inputWorkflow,res);
         workflowRepository.save(inputWorkflow);
@@ -59,13 +58,13 @@ public class WorkflowServiceImpl implements WorkflowService {
         inputWorkflow.setResult(res);
     }
 
-    String execute(int curTaskId,Graph graph) {
-        List<Pair<Integer,String>> edges=graph.getEdges(curTaskId);
+    String execute(int curTaskId, DependencyGraph dependencyGraph) {
+        List<Pair<Integer,String>> edges= dependencyGraph.getEdges(curTaskId);
 
         //Base Case for Leaf Node
         if(edges==null)  return curTaskId+","+"X";
 
-        Task curTask=graph.getTask(curTaskId);
+        Task curTask= dependencyGraph.getTask(curTaskId);
         String output;
         try
         {
@@ -80,7 +79,7 @@ public class WorkflowServiceImpl implements WorkflowService {
              {
                  System.out.print("edge: "+edge.getValue());
                  if(edge.getValue().equals(output))
-                     return curTaskId+","+output+";"+execute(edge.getKey(),graph);
+                     return curTaskId+","+output+";"+execute(edge.getKey(), dependencyGraph);
              }
 
         System.out.println("for task : "+curTask+" output generated: "+output);
@@ -113,7 +112,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 
     @Override
     public List<Workflow> findByNameLike(String name) {
-        return workflowRepository.findByNameLike("%"+name+"%");
+        return workflowRepository.findByNameLikeOrderByCreationDateDesc("%"+name+"%");
     }
 
     @Override

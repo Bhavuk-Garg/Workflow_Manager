@@ -12,15 +12,15 @@ public abstract class Task {
 
     String generateOutput(){
         Random random=new Random();
-//        boolean throwException=random.nextBoolean();
-//        if(throwException)  throw new RuntimeException();
-//        else if(outputs.size()>0)
+        boolean throwException=random.nextBoolean();
+        if(throwException)  throw new RuntimeException();
+        else if(outputs.size()>0)
         {
             int idx=random.nextInt(outputs.size());
             return outputs.get(idx);
         }
-//        else
-//            return "";
+        else
+            return "";
     };
 
 

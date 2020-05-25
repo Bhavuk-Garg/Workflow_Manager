@@ -2,7 +2,6 @@ package com.xor.taskExecutor.controller;
 
 import com.xor.taskExecutor.database.model.Workflow;
 import com.xor.taskExecutor.service.WorkflowService;
-import com.xor.taskExecutor.util.Graph;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
@@ -18,7 +17,6 @@ public class MainController {
 
     @GetMapping(value={"/","/home"})
     public String getHomepage(Model model,@RequestParam(defaultValue = "") String searchWorkflow){
-        System.out.println("Hit Main Get Request with search: "+searchWorkflow);
        model.addAttribute("savedWorkflows",workflowService.findByNameLike(searchWorkflow));
         return "homePage";
     }

@@ -11,44 +11,54 @@
     <div th:replace="fragments/common :: header"></div>
 
     <div class="container">
-        <div class="row justify-content-center">
-            <a class="p-3 m-2 bg-secondary text-white text-decoration-none" href="/allNames">Task Names</a>
-            <a class="p-3 m-2 bg-secondary text-white text-decoration-none" href="/allDependencies">Task Dependencies</a>
-      </div>
-    </div>
 
-    <form method="post">
-        <div class="form-row justify-content-center">
-            <div class="col-6">
-                <input name="name" type="text" class="form-control" id="wfName" placeholder="workflow name" required>
+            <div class="row justify-content-center">
+                <a class="p-3 m-2 bg-secondary text-white text-decoration-none" href="/allNames">Task Names</a>
+                <a class="p-3 m-2 bg-secondary text-white text-decoration-none" href="/allDependencies">Task Dependencies</a>
+             </div>
+
+
+            <form method="post">
+                <div class="form-row justify-content-center">
+                    <div class="col-6">
+                        <input name="name" type="text" class="form-control" id="wfName" placeholder="workflow name" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">Execute</button>
+                </div>
+
+            </form>
+
+        <form class="my-4">
+            <div class="form-row justify-content-end">
+                <input class="col-3 form-control" name="searchWorkflow" type="text" placeholder="search"/>
+                <button type="submit p-2" class="btn btn-success"><i class="fas fa-search-plus"></i></button>
             </div>
-            <button type="submit" class="btn btn-success">Execute</button>
-        </div>
+        </form>
 
-    </form>
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">URL</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr  th:each="workflow,status : ${savedWorkflows}">
+                    <th scope="row" th:text="${status.count}">#</th>
+                    <td th:text="${workflow.name}"></td>
+                    <td th:switch="${#strings.toString(workflow.status)}">
+                        <div th:case="Waiting"><i class="fas fa-circle text-warning"></i></div>
+                        <div th:case="Success"><i class="fas fa-circle text-success"></i></div>
+                        <div th:case="Failed"><i class="fas fa-circle text-danger"></i></div>
+                    </td>
+                    <td><a class="text-decoration-none" th:href="@{'/workflow/'+${workflow.name}}">link</a></td>
+                </tr>
+            </tbody>
+        </table>
 
-    <form class="container my-4">
-        <div class="d-flex justify-content-end">
-            <input name="searchWorkflow" type="text" placeholder="search"/>
-            <button type="submit" class="btn btn-success">Search</button>
-        </div>
-    </form>
-
-    <table class="table container justify-content-center">
-        <tbody>
-            <tr class="row" th:each="workflow,status : ${savedWorkflows}">
-                <td class="col-3" th:text="${status.count}"></td>
-                <td class="col-3" th:text="${workflow.name}"></td>
-                <td class="col-3" th:switch="${#strings.toString(workflow.status)}">
-                    <div th:case="Waiting"><i class="fas fa-circle text-warning"></i></div>
-                    <div th:case="Success"><i class="fas fa-circle text-success"></i></div>
-                    <div th:case="Failed"><i class="fas fa-circle text-danger"></i></div>
-                </td>
-                <td class="col-3"><a class="text-decoration-none" th:href="@{'/workflow/'+${workflow.name}}">link</a></td>
-            </tr>
-        </tbody>
-    </table>
-
+    </div>
 
     <div th:replace="fragments/common:: footer"></div>
 </body>

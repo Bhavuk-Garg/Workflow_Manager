@@ -18,7 +18,7 @@ import java.util.Map;
 
 @Component("dependencyGraph")
 @Scope("prototype")
-public class Graph {
+public class DependencyGraph {
     Map<Integer, List<Pair<Integer,String >>> adjList=new HashMap<>();
     @Autowired
     public TaskMapping taskMapping;
@@ -29,7 +29,7 @@ public class Graph {
 
     @PostConstruct
     void createGraph(){
-        System.out.println("task Mapping for new graph : "+taskMapping);
+//        System.out.println("task Mapping for new graph : "+taskMapping);
         Iterable<TaskDependency> dependencies= taskDependencyService.getAllDependencies();
         for(TaskDependency dependency : dependencies)
         {
