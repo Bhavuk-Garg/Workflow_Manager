@@ -10,18 +10,7 @@ public abstract class Task {
         this.outputs = outputs;
     }
 
-    String generateOutput(){
-        Random random=new Random();
-        boolean throwException=random.nextBoolean();
-        if(throwException)  throw new RuntimeException();
-        else if(outputs.size()>0)
-        {
-            int idx=random.nextInt(outputs.size());
-            return outputs.get(idx);
-        }
-        else
-            return "";
-    };
+    abstract String generateOutput();
 
 
     abstract public String execute();

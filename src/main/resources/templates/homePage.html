@@ -35,6 +35,8 @@
             </div>
         </form>
 
+        <button class="btn btn-secondary" onClick="window.location.reload();"><i class="fas fa-sync-alt"></i></button>
+
         <table class="table table-hover table-striped">
             <thead>
                 <tr>
@@ -49,9 +51,9 @@
                     <th scope="row" th:text="${status.count}">#</th>
                     <td th:text="${workflow.name}"></td>
                     <td th:switch="${#strings.toString(workflow.status)}">
-                        <div th:case="Waiting"><i class="fas fa-circle text-warning"></i></div>
-                        <div th:case="Success"><i class="fas fa-circle text-success"></i></div>
-                        <div th:case="Failed"><i class="fas fa-circle text-danger"></i></div>
+                        <div th:case="Waiting" th:text="Waiting" class="text-warning"></div>
+                        <div th:case="Success" th:text="Success" class="text-success"></div>
+                        <div th:case="Failed" th:text="Failed" class="text-danger"></div>
                     </td>
                     <td><a class="text-decoration-none" th:href="@{'/workflow/'+${workflow.name}}">link</a></td>
                 </tr>

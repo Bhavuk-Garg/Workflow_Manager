@@ -4,6 +4,8 @@ import com.xor.taskExecutor.util.RandomOutput;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.Random;
+
 @Component("threadedTask")
 @Scope("prototype")
 public class ThreadedTask extends Task{
@@ -18,4 +20,14 @@ public class ThreadedTask extends Task{
         System.out.println("Threaded Task Executed");
         return generateOutput();
     }
+    @Override
+    String generateOutput() {
+        Random random=new Random();
+        int randomVal=random.nextInt(outputs.size()+1);
+
+        if(randomVal==outputs.size())  throw new RuntimeException();
+
+        int idx=random.nextInt(outputs.size());
+        return outputs.get(idx);
+    };
 }
