@@ -13,7 +13,7 @@ public class ConditionalTask extends Task {
     @Override
     public String execute() {
         try {
-            Thread.sleep(3000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -22,6 +22,7 @@ public class ConditionalTask extends Task {
     }
     @Override
     String generateOutput() {
+        if(outputs.size()==0)   return null;
         Random random=new Random();
         int randomVal=random.nextInt(outputs.size()+1);
 

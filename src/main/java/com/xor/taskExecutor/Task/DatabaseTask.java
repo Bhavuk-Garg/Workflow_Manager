@@ -13,7 +13,7 @@ public class DatabaseTask extends Task {
     @Override
     public String execute() {
         try {
-            Thread.sleep(3000);
+            Thread.sleep(6000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -22,6 +22,7 @@ public class DatabaseTask extends Task {
     }
     @Override
     String generateOutput() {
+        if(outputs.size()==0)   return null;
         Random random=new Random();
         int randomVal=random.nextInt(outputs.size()+1);
 

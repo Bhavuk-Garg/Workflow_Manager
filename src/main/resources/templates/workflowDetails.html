@@ -10,20 +10,48 @@
 
     <div th:switch="${workflow.status}" class="container text-center">
 
+<!--        Task Waiting Stage-->
         <div  th:case="${T(com.xor.taskExecutor.util.Status).Waiting}" class="display-3">
             Please Wait for the execution to complete...
         </div>
 
         <div th:case="*">
-            <div class="row">
-                <div class="col-5  m-2 p-3">Task </div>
-                <div class="col-5  m-2 p-3">Status</div>
-            </div>
+            <table class="table table-sm">
+                <tbody>
+                    <div th:each="result : ${formattedResult}" th:switch="${resultStat.count==resultStat.size}">
+<!--                        handle last row-->
+                            <tr th:case="true" th:classappend="(${result.getRight()} =='E') ? bg-danger : bg-success">
+                                <td>
+                                    <span th:text="${result.getLeft().toLocalDate()}"/><br/>
+                                    <span th:text="${result.getLeft().toLocalTime()}"/>
+                                </td>
+                                <td th:text="${result.getMiddle()}"></td>
+                                <td th:text="(${result.getRight()} =='E') ?'Caught Exception': 'Successful' "></td>
+                            </tr>
 
-            <div th:each="path,status : ${formattedResult}" class="row text-white">
-                      <div th:text="${path.getKey()}" class="col-5 bg-info m-2 p-3"></div>
-                      <div th:text="${path.getValue()}" class="col-5 bg-info m-2 p-3"></div>
-            </div>
+<!--                            handle rows before last row-->
+                            <div th:case="false">
+                                <tr class="table-success">
+                                    <td>
+                                        <span th:text="${result.getLeft().toLocalDate()}"/><br/>
+                                        <span th:text="${result.getLeft().toLocalTime()}"/>
+                                    </td>
+                                    <td th:text="'Task '+${result.getMiddle()}+' Executed'"></td>
+                                    <td th:text="'Output : ' + ${result.getRight()}"></td>
+                                </tr>
+                                <tr class="bg-warning">
+                                    <td>
+                                        <span th:text="${result.getLeft().toLocalDate()}"/><br/>
+                                        <span th:text="${result.getLeft().toLocalTime()}"/>
+                                    </td>
+                                    <td th:text="${result.getMiddle()+'->'+formattedResult.get(__${resultStat.index+1}__).getMiddle()}"></td>
+                                    <td></td>
+                                </tr>
+                            </div>
+
+                    </div>
+                </tbody>
+            </table>
 
         </div>
     </div>

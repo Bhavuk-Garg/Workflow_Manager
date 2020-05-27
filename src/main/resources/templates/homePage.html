@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/html">
 <head>
+    <META HTTP-EQUIV="refresh" CONTENT="15">
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" type="text/css"
@@ -50,10 +51,10 @@
                 <tr  th:each="workflow,status : ${savedWorkflows}">
                     <th scope="row" th:text="${status.count}">#</th>
                     <td th:text="${workflow.name}"></td>
-                    <td th:switch="${#strings.toString(workflow.status)}">
-                        <div th:case="Waiting" th:text="Waiting" class="text-warning"></div>
-                        <div th:case="Success" th:text="Success" class="text-success"></div>
-                        <div th:case="Failed" th:text="Failed" class="text-danger"></div>
+                    <td th:switch="${workflow.status}">
+                        <strong th:case="${T(com.xor.taskExecutor.util.Status).Waiting}" th:text="Waiting" class="text-warning"></strong>
+                        <strong th:case="${T(com.xor.taskExecutor.util.Status).Success}" th:text="Success" class="text-success"></strong>
+                        <strong th:case="${T(com.xor.taskExecutor.util.Status).Failed}" th:text="Failed" class="text-danger"></strong>
                     </td>
                     <td><a class="text-decoration-none" th:href="@{'/workflow/'+${workflow.name}}">link</a></td>
                 </tr>

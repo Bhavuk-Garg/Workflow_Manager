@@ -22,6 +22,7 @@ public class ThreadedTask extends Task{
     }
     @Override
     String generateOutput() {
+        if(outputs.size()==0)   return null;
         Random random=new Random();
         int randomVal=random.nextInt(outputs.size()+1);
 

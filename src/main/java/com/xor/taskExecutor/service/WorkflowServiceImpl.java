@@ -6,7 +6,6 @@ import com.xor.taskExecutor.util.Status;
 import com.xor.taskExecutor.database.model.Workflow;
 import com.xor.taskExecutor.database.repository.TaskNameRepository;
 import com.xor.taskExecutor.database.repository.WorkflowRepository;
-import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -14,8 +13,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -52,7 +51,7 @@ public class WorkflowServiceImpl implements WorkflowService {
         *   A successful execution returns result ending with "X"
         *   Unsuccessful execution ends with "Exception"
          */
-        if(res.endsWith("X"))
+        if(res.endsWith("S"))
             inputWorkflow.setStatus(Status.Success);
         else    inputWorkflow.setStatus(Status.Failed);
         inputWorkflow.setResult(res);
@@ -61,53 +60,27 @@ public class WorkflowServiceImpl implements WorkflowService {
     String execute(int curTaskId, DependencyGraph dependencyGraph) {
         List<Pair<Integer,String>> edges= dependencyGraph.getEdges(curTaskId);
 
-        //Base Case for Leaf Node
-        if(edges==null)  return curTaskId+","+"X";
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 
         Task curTask= dependencyGraph.getTask(curTaskId);
         String output;
         try
         {
             output=curTask.execute();
+            //Base Case for Leaf Node
+            if(output==null)  return dtf.format(LocalDateTime.now())+","+curTaskId+","+"S";
+
+            for(Pair<Integer,String> edge: edges) {
+                if (edge.getValue().equals(output))
+                    return dtf.format(LocalDateTime.now())+","+curTaskId + "," + output+ ";" + execute(edge.getKey(), dependencyGraph);
+            }
         }catch (Exception e)
         {
-            return curTaskId+","+"Exception"+";";
+            return dtf.format(LocalDateTime.now())+","+curTaskId+","+"E";
         }
 
-        System.out.println("Output: "+output);
-             for(Pair<Integer,String> edge: edges)
-             {
-                 System.out.print("edge: "+edge.getValue());
-                 if(edge.getValue().equals(output))
-                     return curTaskId+","+output+";"+execute(edge.getKey(), dependencyGraph);
-             }
-
-        System.out.println("for task : "+curTask+" output generated: "+output);
-            return "something went wrong";
-    }
-
-
-    public List<Pair<Integer, String>> getFormattedResult(String res) {
-        List<Pair<Integer, String>> formatResult=new ArrayList<>();
-        String []executionPaths=res.split(";");
-        System.out.println(Arrays.toString(executionPaths));
-        for(String s: executionPaths)
-        {
-            String []executionUnit=s.split(",");
-            String pathTaken="";
-            if(executionUnit.length == 1)
-                pathTaken="Default Path Taken";
-            else if(executionUnit[1].equals("X"))
-                pathTaken="Successfully Terminated";
-            else if(executionUnit[1].equals("Exception"))
-                pathTaken="Caught Exception Failed to Execute";
-            else
-                pathTaken="Output Generated "+executionUnit[1];
-
-            formatResult.add(new MutablePair<Integer, String>(Integer.parseInt(executionUnit[0]),pathTaken));
-
-        }
-        return formatResult;
+//        System.out.println("for task : "+curTask+" output generated: "+output);
+        return "something went wrong";
     }
 
     @Override
