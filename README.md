@@ -1,1 +1,1 @@
-# XOR_PROJECT
+# Workflow Executor
