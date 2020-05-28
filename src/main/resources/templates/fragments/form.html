@@ -16,14 +16,11 @@
 
     <form th:fragment="taskDependencyForm" class="container" method="post"  th:object="${taskDependencyDTO}">
         <div class="input-group">
-            <input th:field="*{fromTask}" type="number" class="form-control" placeholder="FROM TASK(int)"/>
-            <div th:if="${#fields.hasErrors('fromTask')}" th:errors="*{fromTask}"></div>
+            <input th:field="*{fromTask}" type="number" class="form-control" placeholder="FROM TASK(int)" required/>
 
-            <input th:field="*{output}" type="text" class="form-control" placeholder="OUTPUT"/>
-            <div th:if="${#fields.hasErrors('output')}" th:errors="*{output}"></div>
+            <input th:field="*{output}" type="text" class="form-control" placeholder="OUTPUT" required/>
 
-            <input th:field="*{toTask}" type="number" class="form-control" placeholder="TO TASK(int)"/>
-            <div th:if="${#fields.hasErrors('toTask')}" th:errors="*{toTask}"></div>
+            <input th:field="*{toTask}" type="number" class="form-control" placeholder="TO TASK(int)" required/>
 
         </div>
         <button type="submit">Submit</button>

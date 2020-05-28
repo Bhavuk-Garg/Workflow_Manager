@@ -2,7 +2,8 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>    <link rel="stylesheet" type="text/css"
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css"
                                   href="/webjars/bootstrap/css/bootstrap.min.css"/>
 </head>
 <body>
@@ -11,11 +12,12 @@
     <div th:switch="${workflow.status}" class="container text-center">
 
 <!--        Task Waiting Stage-->
-        <div  th:case="${T(com.xor.taskExecutor.util.Status).Waiting}" class="display-3">
+        <div  th:case="${T(com.executor.workflowExecutor.components.utility.Status).Waiting}" class="display-3">
             Please Wait for the execution to complete...
         </div>
 
         <div th:case="*">
+            <h1 th:text="${workflowName}" class="m-3 text-left"></h1>
             <table class="table table-sm">
                 <tbody>
                     <div th:each="result : ${formattedResult}" th:switch="${resultStat.count==resultStat.size}">
