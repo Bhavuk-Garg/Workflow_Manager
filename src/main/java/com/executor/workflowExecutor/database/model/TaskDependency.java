@@ -13,7 +13,7 @@ public class TaskDependency {
     @ManyToOne
     @JoinColumn(name="fromTask")
     @NotNull
-    private TaskName fromTask;
+    private TaskInfo fromTask;
 
     @Column(name="output")
     @NotNull
@@ -22,7 +22,7 @@ public class TaskDependency {
     @ManyToOne
     @JoinColumn(name="toTask")
     @NotNull
-    private TaskName toTask;
+    private TaskInfo toTask;
 
     public int getId() {
         return id;
@@ -32,11 +32,11 @@ public class TaskDependency {
         this.id = id;
     }
 
-    public TaskName getFromTask() {
+    public TaskInfo getFromTask() {
         return fromTask;
     }
 
-    public void setFromTask(TaskName fromTask) {
+    public void setFromTask(TaskInfo fromTask) {
         this.fromTask = fromTask;
     }
 
@@ -48,11 +48,11 @@ public class TaskDependency {
         this.output = output;
     }
 
-    public TaskName getToTask() {
+    public TaskInfo getToTask() {
         return toTask;
     }
 
-    public void setToTask(TaskName toTask) {
+    public void setToTask(TaskInfo toTask) {
         this.toTask = toTask;
     }
 

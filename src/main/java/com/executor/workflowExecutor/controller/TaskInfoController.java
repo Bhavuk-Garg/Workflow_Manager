@@ -1,7 +1,7 @@
 package com.executor.workflowExecutor.controller;
 
-import com.executor.workflowExecutor.database.model.TaskName;
-import com.executor.workflowExecutor.service.TaskNameService;
+import com.executor.workflowExecutor.database.model.TaskInfo;
+import com.executor.workflowExecutor.service.TaskInfoService;
 import com.executor.workflowExecutor.components.utility.TaskNamesProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-public class TaskNameController {
+public class TaskInfoController {
     @Autowired
     TaskNamesProvider taskNamesProvider;
 
     @Autowired
-    TaskNameService taskNameService;
+    TaskInfoService taskInfoService;
 
     @ModelAttribute("allowedTaskNames")
     public List<String> getAvailableTaskList(){
@@ -28,13 +28,13 @@ public class TaskNameController {
 
     @GetMapping(value="/allNames")
     public String getTaskNames(Model model){
-        model.addAttribute("availableTaskNames", taskNameService.getAll());
+        model.addAttribute("availableTaskNames", taskInfoService.getAll());
         return "taskNamesList";
     }
 
     @PostMapping("/allNames")
-    public String addTaskName(TaskName taskName){
-       taskNameService.save(taskName);
+    public String addTaskName(TaskInfo taskInfo){
+       taskInfoService.save(taskInfo);
        return "redirect:/allNames";
     }
 
@@ -45,8 +45,9 @@ public class TaskNameController {
 
     @PostMapping("/editTaskName/{taskId}")
     public String setTaskName(@PathVariable("taskId") Integer id,
-                               @RequestParam String name){
-        taskNameService.edit(id,name);
+                               TaskInfo taskInfo){
+        taskInfo.setId(id);
+        taskInfoService.save(taskInfo);
         return "redirect:/allNames";
     }
 

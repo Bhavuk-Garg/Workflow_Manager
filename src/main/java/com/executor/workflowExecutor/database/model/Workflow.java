@@ -11,14 +11,14 @@ public class Workflow {
     @Id
     String name;
 
-    @Column(name = "status",columnDefinition = "varchar(32) default 'Waiting'")
+    @Column(name = "status",columnDefinition = "varchar(32) default 'WAITING'")
     @Enumerated(value=EnumType.STRING)
-    Status status=Status.Waiting;
+    Status status=Status.NORMAL;
 
     @Column(name="creation_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate=new Date();
-    String result;
+    String result="";
 
 
     public Workflow(){}

@@ -1,16 +1,24 @@
 package com.executor.workflowExecutor.components.utility;
 
+import com.executor.workflowExecutor.database.model.TaskInfo;
+import com.executor.workflowExecutor.service.TaskInfoService;
 import org.apache.commons.lang3.tuple.Triple;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class OutputFormatter {
+    @Autowired
+    TaskInfoService taskInfoService;
 
-    public static List<Triple<LocalDateTime , Integer,String>> formatResult(String res) {
-        List<Triple<LocalDateTime, Integer, String>> formatResult=new ArrayList<>();
+    public List<Triple<LocalDateTime , TaskInfo,String>> formatResult(String res) {
+        List<Triple<LocalDateTime, TaskInfo, String>> formattedResult=new ArrayList<>();
+        if(res==null || res.length()==0)   return formattedResult;
         String []executedTaskStatusList=res.split(";");
 
         for(String curExecutedTaskStatus: executedTaskStatusList)
@@ -33,9 +41,10 @@ public class OutputFormatter {
                 outputGenerated=info[2];
 
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-                formatResult.add(Triple.of(LocalDateTime.parse(info[0],dtf),Integer.parseInt(info[1]),outputGenerated));
+                TaskInfo taskInfo = taskInfoService.findById(Integer.parseInt(info[1]));
+                formattedResult.add(Triple.of(LocalDateTime.parse(info[0],dtf), taskInfo,outputGenerated));
         }
-        return formatResult;
+        return formattedResult;
     }
 
 }

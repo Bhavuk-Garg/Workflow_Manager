@@ -1,61 +1,102 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
+<!--    <META HTTP-EQUIV="refresh" CONTENT="3">-->
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" type="text/css"
-                                  href="/webjars/bootstrap/css/bootstrap.min.css"/>
+          href="/webjars/bootstrap/css/bootstrap.min.css"/>
 </head>
 <body>
+    <script th:inline="javascript">
+        var status=[[${workflow.status}]];
+        if(status=='NORMAL')
+               setTimeout("location.reload(true);", 4000);
+    </script>
+
     <div th:replace="fragments/common :: header"></div>
-
-    <div th:switch="${workflow.status}" class="container text-center">
-
-<!--        Task Waiting Stage-->
-        <div  th:case="${T(com.executor.workflowExecutor.components.utility.Status).Waiting}" class="display-3">
-            Please Wait for the execution to complete...
-        </div>
-
-        <div th:case="*">
+    <div class="container">
             <h1 th:text="${workflowName}" class="m-3 text-left"></h1>
-            <table class="table table-sm">
-                <tbody>
-                    <div th:each="result : ${formattedResult}" th:switch="${resultStat.count==resultStat.size}">
-<!--                        handle last row-->
-                            <tr th:case="true" th:classappend="(${result.getRight()} =='E') ? bg-danger : bg-success">
-                                <td>
-                                    <span th:text="${result.getLeft().toLocalDate()}"/><br/>
-                                    <span th:text="${result.getLeft().toLocalTime()}"/>
-                                </td>
-                                <td th:text="${result.getMiddle()}"></td>
-                                <td th:text="(${result.getRight()} =='E') ?'Caught Exception': 'Successful' "></td>
-                            </tr>
 
-<!--                            handle rows before last row-->
-                            <div th:case="false">
-                                <tr class="table-success">
-                                    <td>
-                                        <span th:text="${result.getLeft().toLocalDate()}"/><br/>
-                                        <span th:text="${result.getLeft().toLocalTime()}"/>
-                                    </td>
-                                    <td th:text="'Task '+${result.getMiddle()}+' Executed'"></td>
-                                    <td th:text="'Output : ' + ${result.getRight()}"></td>
-                                </tr>
-                                <tr class="bg-warning">
-                                    <td>
-                                        <span th:text="${result.getLeft().toLocalDate()}"/><br/>
-                                        <span th:text="${result.getLeft().toLocalTime()}"/>
-                                    </td>
-                                    <td th:text="${result.getMiddle()+'->'+formattedResult.get(__${resultStat.index+1}__).getMiddle()}"></td>
-                                    <td></td>
-                                </tr>
-                            </div>
+        <table class="table">
+            <tbody>
+                <div th:each="result : ${formattedResult}" th:if="${resultStat.count<formattedResult.size()}">
+                        <tr class="table-success">
+                            <td>
+                                <span th:text="${result.getLeft().toLocalDate()}"/><br/>
+                                <span th:text="${result.getLeft().toLocalTime()}"/>
+                            </td>
+                            <td th:text="'Task '+${result.getMiddle().getId()+' : '+result.getMiddle().getName()}+' Executed'"></td>
+                            <td th:text="${'Output : '+  result.getRight()}"></td>
+                        </tr>
 
+                    </tr>
+                    <tr th:if="${resultStat.count<formattedResult.size()}" class="bg-warning">
+                        <td>
+                            <span th:text="${result.getLeft().toLocalDate()}"/><br/>
+                            <span th:text="${result.getLeft().toLocalTime()}"/>
+                        </td>
+                        <td th:text="${result.getMiddle().getId()+'->'+formattedResult.get(__${resultStat.index+1}__).getMiddle().getId()}"></td>
+                        <td></td>
+                    </tr>
+                </div>
+            </tbody>
+
+            <tfoot th:switch="${workflow.status}" th:if="${formattedResult.size()>0}">
+                <tr th:case="${T(com.executor.workflowExecutor.components.utility.Status).SUCCESS}"
+                    class="bg-success" th:object="${formattedResult.get(formattedResult.size()-1)}">
+                    <td>
+                        <span th:text="*{getLeft().toLocalDate()}"/><br/>
+                        <span th:text="*{getLeft().toLocalTime()}"/>
+                    </td>
+                    <td th:text="'Task '+*{getMiddle().getId()}+' : '+*{getMiddle().getName()}+' Executed'"></td>
+                    <td></td>
+                </tr>
+                <tr th:case="${T(com.executor.workflowExecutor.components.utility.Status).FAILED}"
+                    class="bg-danger" th:object="${formattedResult.get(formattedResult.size()-1)}">
+                    <td>
+                        <span th:text="*{getLeft().toLocalDate()}"/><br/>
+                        <span th:text="*{getLeft().toLocalTime()}"/>
+                    </td>
+                    <td th:text="'Task '+*{getMiddle().getId()}+' : '+*{getMiddle().getName()}+' Executed'"></td>
+                    <td></td>
+                </tr>
+                <tr th:case="*"
+                    class="table-success" th:object="${formattedResult.get(formattedResult.size()-1)}">
+                    <td>
+                        <span th:text="*{getLeft().toLocalDate()}"/><br/>
+                        <span th:text="*{getLeft().toLocalTime()}"/>
+                    </td>
+                    <td th:text="'Task '+*{getMiddle().getId()}+' : '+*{getMiddle().getName()}+' Executed'"></td>
+                    <td th:text="${'Output : '+  #object.getRight() }"></td>
+                </tr>
+            </tfoot>
+
+        </table>
+
+
+        <div th:switch="${workflow.status}">
+            <div th:case="${T(com.executor.workflowExecutor.components.utility.Status).NORMAL}">
+                Please Wait for Execution to complete....
+            </div>
+            <div th:case="${T(com.executor.workflowExecutor.components.utility.Status).TRIGGER_WAIT}">
+                <a th:href="@{'/triggerExecute/'+${workflowName} }" class="bg-success text-white p-3 text-decoration-none my-2">
+                    Trigger
+                </a>
+            </div>
+            <div th:case="${T(com.executor.workflowExecutor.components.utility.Status).TIMED_WAIT}">
+                <form method="get" th:action="@{'/timedExecute/'+${workflowName} }">
+                    <div class="form-row">
+                        <div class="col-md-3">
+                            <input class="form-control" type="number" name="time" placeholder="Enter time in seconds"/>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Trigger</button>
                     </div>
-                </tbody>
-            </table>
-
+                </form>
+            </div>
         </div>
+
+
     </div>
 </body>
 </html>

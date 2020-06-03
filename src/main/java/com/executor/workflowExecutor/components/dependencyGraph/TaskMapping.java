@@ -2,8 +2,9 @@ package com.executor.workflowExecutor.components.dependencyGraph;
 
 import com.executor.workflowExecutor.Task.Task;
 import com.executor.workflowExecutor.database.model.TaskDependency;
+import com.executor.workflowExecutor.database.model.TaskInfo;
 import com.executor.workflowExecutor.service.TaskDependencyService;
-import com.executor.workflowExecutor.service.TaskNameService;
+import com.executor.workflowExecutor.service.TaskInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 public class TaskMapping {
     private Map<Integer, Task> taskIdRecord=new HashMap<>();;
     @Autowired
-    TaskNameService taskNameService;
+    TaskInfoService taskInfoService;
 
     @Autowired
     TaskDependencyService taskDependencyService;
@@ -34,14 +35,17 @@ public class TaskMapping {
 
     private Task createTask(int id)
     {
+        System.out.println("creating record for task id: "+id);
         /*
-        *   Load all dependent tasks to set outputs
+        *   Load all dependent tasks and set possible outputs
          */
        List<TaskDependency> dependencies= taskDependencyService.findByFromId(id);
        List<String> outputs=dependencies.stream().map(dependency-> dependency.getOutput()).collect(Collectors.toList());
 
-        Task reqTask=applicationContext.getBean(taskNameService.findById(id).getName(),Task.class);
+       TaskInfo curTaskInfo=taskInfoService.findById(id);
+        Task reqTask=applicationContext.getBean(curTaskInfo.getName(),Task.class);
         reqTask.setOutputs(outputs);
+        reqTask.setType(curTaskInfo.getType());
         return reqTask;
     }
 

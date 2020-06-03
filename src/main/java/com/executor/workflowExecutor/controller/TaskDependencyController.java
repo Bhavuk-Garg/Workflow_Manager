@@ -36,8 +36,8 @@ public class TaskDependencyController {
         //If DTO object is not valid return same page
         if(bindingResult.hasErrors()) {
             model.addAttribute("dependencies", taskDependencyService.getAll());
-            return "taskDependenciesList";
-        }
+                return "taskDependenciesList";
+            }
         taskDependencyService.add(taskDependencyDTO);
         return "redirect:/allDependencies";
     }

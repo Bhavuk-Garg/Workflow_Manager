@@ -1,5 +1,5 @@
 package com.executor.workflowExecutor.components.utility;
 
 public enum Status {
-    Success,Waiting,Failed
+    SUCCESS,NORMAL,FAILED,TIMED_WAIT,TRIGGER_WAIT;
 }

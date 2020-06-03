@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/webjars/font-awesome/css/all.min.css"/>
 </head>
 <body>
+
     <div th:replace="fragments/common :: header"></div>
 
     <div class="container">
@@ -52,9 +53,9 @@
                     <th scope="row" th:text="${status.count}">#</th>
                     <td th:text="${workflow.name}"></td>
                     <td th:switch="${workflow.status}">
-                        <strong th:case="${T( com.executor.workflowExecutor.components.utility.Status).Waiting}" th:text="Waiting" class="text-warning"></strong>
-                        <strong th:case="${T( com.executor.workflowExecutor.components.utility.Status).Success}" th:text="Success" class="text-success"></strong>
-                        <strong th:case="${T( com.executor.workflowExecutor.components.utility.Status).Failed}" th:text="Failed" class="text-danger"></strong>
+                        <strong th:case="${T( com.executor.workflowExecutor.components.utility.Status).SUCCESS}" th:text="Success" class="text-success"></strong>
+                        <strong th:case="${T( com.executor.workflowExecutor.components.utility.Status).FAILED}" th:text="Failed" class="text-danger"></strong>
+                        <strong th:case="*" th:text="Waiting" class="text-warning"></strong>
                     </td>
                     <td><a class="text-decoration-none" th:href="@{'/workflow/'+${workflow.name}}">link</a></td>
                 </tr>

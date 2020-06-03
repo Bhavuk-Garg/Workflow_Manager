@@ -6,12 +6,19 @@
 </head>
 <body>
 
-    <form th:fragment="taskNameForm" class="container" method="post">
-        <select class="form-control" name="name">
-            <option th:each="taskName:${allowedTaskNames}" th:value="${taskName}" th:text="${taskName}">
-            </option>
-        </select>
-        <button type="submit btn btn-primary">Submit</button>
+    <form th:fragment="taskInfoForm" method="post" class="container">
+        <div class="input-group">
+                <select class="form-control" name="name" required>
+                    <option th:each="taskInfo:${allowedTaskNames}" th:value="${taskInfo}" th:text="${taskInfo}">
+                    </option>
+                </select>
+                <select class="form-control" name="type" required>
+                    <option th:value="${T(com.executor.workflowExecutor.components.utility.Status).NORMAL}">Normal</option>
+                    <option th:value="${T(com.executor.workflowExecutor.components.utility.Status).TIMED_WAIT}">Timed Wait</option>
+                    <option th:value="${T(com.executor.workflowExecutor.components.utility.Status).TRIGGER_WAIT}">Trigger Wait</option>
+                </select>
+        </div>
+            <button type="submit" class="btn btn-primary my-3">Submit</button>
     </form>
 
     <form th:fragment="taskDependencyForm" class="container" method="post"  th:object="${taskDependencyDTO}">
@@ -23,7 +30,7 @@
             <input th:field="*{toTask}" type="number" class="form-control" placeholder="TO TASK(int)" required/>
 
         </div>
-        <button type="submit">Submit</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 
 </body>
