@@ -1,5 +1,6 @@
 package com.executor.workflowExecutor.service;
 
+import com.executor.workflowExecutor.components.dependencyGraph.DependencyGraph;
 import com.executor.workflowExecutor.database.repository.WorkflowRepository;
 import com.executor.workflowExecutor.database.model.Workflow;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,8 @@ public class WorkflowServiceImpl implements WorkflowService {
     @Override
     @Async
     public void executeWorkflow(Workflow inputWorkflow)  {
-        String res=executionService.execute(1,inputWorkflow);
+        DependencyGraph dependencyGraph=applicationContext.getBean("dependencyGraph",DependencyGraph.class);
+        String res=executionService.execute(1,inputWorkflow,dependencyGraph);
         System.out.println("returned from execution service with :");
         System.out.println(res);
     }

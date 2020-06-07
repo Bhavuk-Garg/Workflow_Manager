@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/html">
 <head>
-    <META HTTP-EQUIV="refresh" CONTENT="10">
+    <META HTTP-EQUIV="refresh" CONTENT="3">
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" type="text/css"
@@ -55,6 +55,8 @@
                     <td th:switch="${workflow.status}">
                         <strong th:case="${T( com.executor.workflowExecutor.components.utility.Status).SUCCESS}" th:text="Success" class="text-success"></strong>
                         <strong th:case="${T( com.executor.workflowExecutor.components.utility.Status).FAILED}" th:text="Failed" class="text-danger"></strong>
+                        <strong th:case="${T( com.executor.workflowExecutor.components.utility.Status).TIMED_WAIT}" th:text="Timed_Wait" class="text-info"></strong>
+                        <strong th:case="${T( com.executor.workflowExecutor.components.utility.Status).TRIGGER_WAIT}" th:text="Trigger_Wait" style="color:purple;"></strong>
                         <strong th:case="*" th:text="Waiting" class="text-warning"></strong>
                     </td>
                     <td><a class="text-decoration-none" th:href="@{'/workflow/'+${workflow.name}}">link</a></td>

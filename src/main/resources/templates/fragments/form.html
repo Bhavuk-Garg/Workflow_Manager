@@ -14,7 +14,7 @@
                 </select>
                 <select class="form-control" name="type" required>
                     <option th:value="${T(com.executor.workflowExecutor.components.utility.Status).NORMAL}">Normal</option>
-                    <option th:value="${T(com.executor.workflowExecutor.components.utility.Status).TIMED_WAIT}">Timed Wait</option>
+                    <option th:value="${T(com.executor.workflowExecutor.components.utility.Status).TIME_WAIT}">Timed Wait</option>
                     <option th:value="${T(com.executor.workflowExecutor.components.utility.Status).TRIGGER_WAIT}">Trigger Wait</option>
                 </select>
         </div>

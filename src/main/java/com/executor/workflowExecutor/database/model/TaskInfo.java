@@ -1,10 +1,6 @@
 package com.executor.workflowExecutor.database.model;
 
 import com.executor.workflowExecutor.components.utility.Status;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -24,20 +20,23 @@ public class TaskInfo {
     @Enumerated(value=EnumType.STRING)
     private Status type;
 
+    @Column(name="time")
+    int time=5;
+
+    public int getTime() {
+        return time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
+    }
+
     public Status getType() {
         return type;
     }
 
     public void setType(Status type) {
         this.type = type;
-    }
-
-
-    public TaskInfo(){}
-
-    public TaskInfo(int id, @NotNull String name) {
-        this.id = id;
-        this.name = name;
     }
 
     public int getId() {

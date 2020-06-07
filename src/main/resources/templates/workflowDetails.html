@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-<!--    <META HTTP-EQUIV="refresh" CONTENT="3">-->
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" type="text/css"
@@ -10,14 +9,30 @@
 <body>
     <script th:inline="javascript">
         var status=[[${workflow.status}]];
-        if(status=='NORMAL')
-               setTimeout("location.reload(true);", 4000);
+        if(status=='NORMAL' || status=='TIME_WAIT')
+               setTimeout("location.reload(true);", 3000);
     </script>
 
     <div th:replace="fragments/common :: header"></div>
     <div class="container">
+
             <h1 th:text="${workflowName}" class="m-3 text-left"></h1>
 
+            <div class="my-2 progress" style="height: 40px;" th:if="${workflow.status!=T(com.executor.workflowExecutor.components.utility.Status).SUCCESS
+                && workflow.status!=T(com.executor.workflowExecutor.components.utility.Status).FAILED}" >
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"  style="width: 100%">
+                    <div th:switch="${workflow.status}">
+                        <div th:case="${T(com.executor.workflowExecutor.components.utility.Status).TIME_WAIT}">
+                            It is a time Wait....
+                        </div>
+                        <div th:case="*">
+                            Waiting for Execution to complete ....
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+<!--        show first n-1 outputs-->
         <table class="table">
             <tbody>
                 <div th:each="result : ${formattedResult}" th:if="${resultStat.count<formattedResult.size()}">
@@ -30,7 +45,13 @@
                             <td th:text="${'Output : '+  result.getRight()}"></td>
                         </tr>
 
-                    </tr>
+                        <tr class="table-dark" th:if="${result.getMiddle().getType() == T(com.executor.workflowExecutor.components.utility.Status).TRIGGER_WAIT ||
+                                result.getMiddle().getType()==T(com.executor.workflowExecutor.components.utility.Status).TIME_WAIT}">
+                            <td>Trigger Accepted</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+
                     <tr th:if="${resultStat.count<formattedResult.size()}" class="bg-warning">
                         <td>
                             <span th:text="${result.getLeft().toLocalDate()}"/><br/>
@@ -42,6 +63,8 @@
                 </div>
             </tbody>
 
+
+<!--            formatting for the last output-->
             <tfoot th:switch="${workflow.status}" th:if="${formattedResult.size()>0}">
                 <tr th:case="${T(com.executor.workflowExecutor.components.utility.Status).SUCCESS}"
                     class="bg-success" th:object="${formattedResult.get(formattedResult.size()-1)}">
@@ -61,39 +84,47 @@
                     <td th:text="'Task '+*{getMiddle().getId()}+' : '+*{getMiddle().getName()}+' Executed'"></td>
                     <td></td>
                 </tr>
-                <tr th:case="*"
-                    class="table-success" th:object="${formattedResult.get(formattedResult.size()-1)}">
-                    <td>
-                        <span th:text="*{getLeft().toLocalDate()}"/><br/>
-                        <span th:text="*{getLeft().toLocalTime()}"/>
-                    </td>
-                    <td th:text="'Task '+*{getMiddle().getId()}+' : '+*{getMiddle().getName()}+' Executed'"></td>
-                    <td th:text="${'Output : '+  #object.getRight() }"></td>
-                </tr>
+                    <div th:case="*" th:object="${formattedResult.get(formattedResult.size()-1)}">
+                        <tr class="table-success">
+                            <td>
+                                <span th:text="*{getLeft().toLocalDate()}"/><br/>
+                                <span th:text="*{getLeft().toLocalTime()}"/>
+                            </td>
+                            <td th:text="'Task '+*{getMiddle().getId()}+' : '+*{getMiddle().getName()}+' Executed'"></td>
+                            <td th:text="${'Output : '+  #object.getRight() }"></td>
+                        </tr>
+                        <tr class="table-dark" th:object="${formattedResult.get(formattedResult.size()-1)}"
+                            th:if="${workflow.status==T(com.executor.workflowExecutor.components.utility.Status).NORMAL &&
+                            (#object.getMiddle().getType()==T(com.executor.workflowExecutor.components.utility.Status).TRIGGER_WAIT
+                            || #object.getMiddle().getType()==T(com.executor.workflowExecutor.components.utility.Status).TIME_WAIT)
+                            }">
+                            <td>Trigger Accepted</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                </div>
             </tfoot>
 
         </table>
 
 
+<!--        show inputs in case-->
         <div th:switch="${workflow.status}">
-            <div th:case="${T(com.executor.workflowExecutor.components.utility.Status).NORMAL}">
-                Please Wait for Execution to complete....
-            </div>
-            <div th:case="${T(com.executor.workflowExecutor.components.utility.Status).TRIGGER_WAIT}">
-                <a th:href="@{'/triggerExecute/'+${workflowName} }" class="bg-success text-white p-3 text-decoration-none my-2">
-                    Trigger
-                </a>
-            </div>
-            <div th:case="${T(com.executor.workflowExecutor.components.utility.Status).TIMED_WAIT}">
-                <form method="get" th:action="@{'/timedExecute/'+${workflowName} }">
-                    <div class="form-row">
-                        <div class="col-md-3">
-                            <input class="form-control" type="number" name="time" placeholder="Enter time in seconds"/>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Trigger</button>
-                    </div>
-                </form>
-            </div>
+                <div th:case="${T(com.executor.workflowExecutor.components.utility.Status).TRIGGER_WAIT}">
+                    <a th:href="@{'/triggerExecute/'+${workflowName} }" class="bg-success text-white p-3 text-decoration-none my-2">
+                        Trigger
+                    </a>
+                </div>
+<!--            <div th:case="${T(com.executor.workflowExecutor.components.utility.Status).TIME_WAIT}">-->
+<!--                <form method="get" th:action="@{'/timedExecute/'+${workflowName} }">-->
+<!--                    <div class="form-row">-->
+<!--                        <div class="col-md-3">-->
+<!--                            <input class="form-control" type="number" name="time" placeholder="Enter time in seconds"/>-->
+<!--                        </div>-->
+<!--                        <button type="submit" class="btn btn-primary">Trigger</button>-->
+<!--                    </div>-->
+<!--                </form>-->
+<!--            </div>-->
         </div>
 
 

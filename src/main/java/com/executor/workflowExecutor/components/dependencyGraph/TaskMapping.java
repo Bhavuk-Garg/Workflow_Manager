@@ -15,40 +15,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Component
+@Component("taskMapping")
 @Scope("prototype")
 public class TaskMapping {
     private Map<Integer, Task> taskIdRecord=new HashMap<>();;
-    @Autowired
-    TaskInfoService taskInfoService;
 
     @Autowired
-    TaskDependencyService taskDependencyService;
-
-    @Autowired
-    ApplicationContext applicationContext;
+    TaskFactory taskFactory;
 
     public void addTaskRecord(int id){
         if(taskIdRecord.containsKey(id))    return;
-        taskIdRecord.put(id,createTask(id));
+        taskIdRecord.put(id,taskFactory.createTask(id));
     }
-
-    private Task createTask(int id)
-    {
-        System.out.println("creating record for task id: "+id);
-        /*
-        *   Load all dependent tasks and set possible outputs
-         */
-       List<TaskDependency> dependencies= taskDependencyService.findByFromId(id);
-       List<String> outputs=dependencies.stream().map(dependency-> dependency.getOutput()).collect(Collectors.toList());
-
-       TaskInfo curTaskInfo=taskInfoService.findById(id);
-        Task reqTask=applicationContext.getBean(curTaskInfo.getName(),Task.class);
-        reqTask.setOutputs(outputs);
-        reqTask.setType(curTaskInfo.getType());
-        return reqTask;
-    }
-
 
     public Task getTask(int id) {
         if(taskIdRecord.containsKey(id))

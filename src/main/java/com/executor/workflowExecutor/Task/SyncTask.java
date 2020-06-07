@@ -19,8 +19,8 @@ public class SyncTask extends Task {
         System.out.println("Sync Task Executed");
         return generateOutput();
     }
-    @Override
-    String generateOutput() {
+
+    private String generateOutput() {
         if(outputs.size()==0)   return null;
         Random random=new Random();
         int randomVal=random.nextInt(outputs.size()+1);

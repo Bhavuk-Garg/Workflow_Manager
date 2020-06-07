@@ -19,8 +19,8 @@ public class ConditionalTask extends Task {
         System.out.println("conditional task Executed");
         return generateOutput();
     }
-    @Override
-    String generateOutput() {
+
+    private String generateOutput() {
         if(outputs.size()==0)   return null;
         Random random=new Random();
         int randomVal=random.nextInt(outputs.size()+1);

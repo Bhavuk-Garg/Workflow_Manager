@@ -20,8 +20,7 @@ public class PrintTask extends Task {
         return generateOutput();
     }
 
-    @Override
-    String generateOutput() {
+    private String generateOutput() {
         if(outputs.size()==0)   return null;
         Random random=new Random();
         int randomVal=random.nextInt(outputs.size()+1);

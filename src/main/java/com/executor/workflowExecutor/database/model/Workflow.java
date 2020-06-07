@@ -11,7 +11,7 @@ public class Workflow {
     @Id
     String name;
 
-    @Column(name = "status",columnDefinition = "varchar(32) default 'WAITING'")
+    @Column(name = "status",columnDefinition = "varchar(32) default 'NORMAL'")
     @Enumerated(value=EnumType.STRING)
     Status status=Status.NORMAL;
 

@@ -1,29 +1,32 @@
 package com.executor.workflowExecutor.service;
 
+import com.executor.workflowExecutor.components.utility.Status;
 import com.executor.workflowExecutor.database.model.TaskInfo;
-import com.executor.workflowExecutor.database.repository.TaskNameRepository;
+import com.executor.workflowExecutor.database.model.TimedWaitTasks;
+import com.executor.workflowExecutor.database.repository.TaskInfoRepository;
+import com.executor.workflowExecutor.database.repository.TimedWaitTasksRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TaskInfoServiceImpl implements TaskInfoService {
     @Autowired
-    TaskNameRepository taskNameRepository;
+    TaskInfoRepository taskInfoRepository;
 
     @Override
     public Iterable<TaskInfo> getAll(){
-        return taskNameRepository.findAll();
+        return taskInfoRepository.findAll();
     }
 
     @Override
     public void save(TaskInfo inputTaskInfo)
     {
-        taskNameRepository.save(inputTaskInfo);
+        taskInfoRepository.save(inputTaskInfo);
     }
 
     @Override
     public TaskInfo findById(int id) {
-        return taskNameRepository.findById(id).orElse(null);
+        return taskInfoRepository.findById(id).orElse(null);
     }
 
 }

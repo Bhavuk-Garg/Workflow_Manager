@@ -6,6 +6,7 @@ import com.executor.workflowExecutor.service.TaskDependencyService;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -21,14 +22,17 @@ import java.util.Map;
 public class DependencyGraph {
     Map<Integer, List<Pair<Integer,String >>> adjList=new HashMap<>();
     @Autowired
+    ApplicationContext applicationContext;
+
     public TaskMapping taskMapping;
 
     @Autowired
     TaskDependencyService taskDependencyService;
 
-
     @PostConstruct
     void createGraph(){
+        taskMapping =applicationContext.getBean("taskMapping",TaskMapping.class);
+        System.out.println("here: "+taskMapping);
         Iterable<TaskDependency> dependencies= taskDependencyService.getAll();
         for(TaskDependency dependency : dependencies)
         {

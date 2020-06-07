@@ -29,7 +29,6 @@ public class ExecutionController {
     @GetMapping("/timedExecute/{name}")
     public String resumeTimedWait(@PathVariable("name") String workflowName,
                                   @RequestParam int time) throws InterruptedException {
-        System.out.println("hit timed controller with: "+workflowName+" "+time);
         Workflow workflow=workflowService.findByName(workflowName);
         executionService.setStauts(workflow, Status.NORMAL);
         executionService.resumeExecution(workflow,time*1000);

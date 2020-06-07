@@ -2,7 +2,7 @@ package com.executor.workflowExecutor.service;
 
 import com.executor.workflowExecutor.database.model.TaskDependency;
 import com.executor.workflowExecutor.database.repository.TaskDependencyRepository;
-import com.executor.workflowExecutor.database.repository.TaskNameRepository;
+import com.executor.workflowExecutor.database.repository.TaskInfoRepository;
 import com.executor.workflowExecutor.dto.TaskDependencyDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public class TaskDependencyServieImpl implements TaskDependencyService{
     @Autowired
-    TaskNameRepository taskNameRepository;
+    TaskInfoRepository taskInfoRepository;
     @Autowired
     TaskDependencyRepository taskDependencyRepository;
 
@@ -40,8 +40,8 @@ public class TaskDependencyServieImpl implements TaskDependencyService{
         */
         TaskDependency newDependency=new TaskDependency();
 
-        newDependency.setFromTask(taskNameRepository.findById(inputDTO.getFromTask()).orElse(null));
-        newDependency.setToTask(taskNameRepository.findById(inputDTO.getToTask()).orElse(null));
+        newDependency.setFromTask(taskInfoRepository.findById(inputDTO.getFromTask()).orElse(null));
+        newDependency.setToTask(taskInfoRepository.findById(inputDTO.getToTask()).orElse(null));
         newDependency.setOutput(inputDTO.getOutput());
         return newDependency;
     }
