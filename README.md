@@ -52,6 +52,7 @@ ASFT as an org has orchestrator systems which interacts with multiple other serv
 
 ## Creating Dependency Graph
 
+<img align="center" src="assets/taskMapping.jpg" alt="graph structure"/>
 Adjacency List is used to create graph. First I fetch all dependencies, then use Map data structure to map each task id to its adjacent task id along 
 with corresponding output, so it is constructed like `Map<Integer,List<Pair<Integer,String>>>`. A TaskMapping is maintained to associate Task Instances with their
 id like `Map<Integer,Task>` . Graph is also provided with a recovery mechanism which defines the number of retries and exponent for wait.
