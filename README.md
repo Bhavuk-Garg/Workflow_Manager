@@ -42,6 +42,11 @@ ASFT as an org has orchestrator systems which interacts with multiple other serv
 * Database
     * Mysql
     
+## Task UML Diagram
+<img align="center" src="assets/taskUML.jpg" alt="table Image" />
+
+Decorator design pattern adds dynamic functionality to an object at runtime. So we use it to add pauseExecution() functionality to the object.
+
 ## Database Model of Project
 
 <img align="center" src="assets/tablesImage.jpg" alt="table Image" />
@@ -53,11 +58,13 @@ ASFT as an org has orchestrator systems which interacts with multiple other serv
 ## Creating Dependency Graph
 
 <img align="center" src="assets/taskMapping.jpg" alt="graph structure"/>
+
 Adjacency List is used to create graph. First I fetch all dependencies, then use Map data structure to map each task id to its adjacent task id along 
-with corresponding output, so it is constructed like `Map<Integer,List<Pair<Integer,String>>>`. A TaskMapping is maintained to associate Task Instances with their
+with corresponding output, so it is constructed like `Map<Integer,List<Pair\<Integer,String>>>` . A TaskMapping is maintained to associate Task Instances with their
 id like `Map<Integer,Task>` . Graph is also provided with a recovery mechanism which defines the number of retries and exponent for wait.
 
 ## Executing workflow
+
 So execution always starts from `Task ID: 1`. then we fetch corresponding task from taskMapping created in dependeny graph. each task will have execute() method
 that generate a `String output` because every task implements executable interface. 
 * `If Exception is thrown` : We catch the exception and call the recovery mechanism defined in the dependency graph.
@@ -69,10 +76,6 @@ that generate a `String output` because every task implements executable interfa
          * `case TIME_WAIT task `: Before execution starts change workflow tag to time_wait so that html shows relative messages.Append the result to workflow and change status to normal.
                                     Find matching edge and recursively start execution.
                                     
-## Task UML Diagram
-<img align="center" src="assets/taskUML.jpg" alt="table Image" />
-
-Decorator design pattern adds dynamic functionality to an object at runtime. So we use it to add pauseExecution() functionality to the object.
 
 ## Handling Failed Tasks
 
