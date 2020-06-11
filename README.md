@@ -42,7 +42,7 @@ ASFT as an org has orchestrator systems which interacts with multiple other serv
 * Database
     * Mysql
     
-##Database Model of Project
+## Database Model of Project
 
 <img align="center" src="assets/tablesImage.jpg" alt="table Image" />
 
