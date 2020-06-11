@@ -18,7 +18,7 @@ public class TaskInfoController {
     @Autowired
     TaskInfoService taskInfoService;
 
-    @ModelAttribute("allowedTaskNames")
+    @ModelAttribute("availableTaskNames")
     public List<String> getAvailableTaskList(){
         /*
          *   list of predefined taskNames is loaded in every model
@@ -26,29 +26,33 @@ public class TaskInfoController {
         return taskNamesProvider.getAllowedTaskNames();
     }
 
-    @GetMapping(value="/allNames")
-    public String getTaskNames(Model model){
-        model.addAttribute("availableTaskNames", taskInfoService.getAll());
-        return "taskNamesList";
+    @GetMapping(value="/allTaskInfo")
+    public String getAllTaskInfo(Model model){
+        model.addAttribute("inputTaskInfo",new TaskInfo());
+        model.addAttribute("allTaskInfo", taskInfoService.getAll());
+        return "allTaskInfoList";
     }
 
-    @PostMapping("/allNames")
-    public String addTaskName(TaskInfo taskInfo){
+    @PostMapping("/allTaskInfo")
+    public String addTaskInfo(TaskInfo taskInfo){
        taskInfoService.save(taskInfo);
-       return "redirect:/allNames";
+       return "redirect:/allTaskInfo";
     }
 
-    @GetMapping("/editTaskName/{taskId}")
+    @GetMapping("/editTaskInfo/{taskId}")
     public String getEditTaskNameForm(Model model){
-        return "editNameForm";
+        model.addAttribute("inputTaskInfo",new TaskInfo());
+        return "editTaskInfoForm";
     }
 
-    @PostMapping("/editTaskName/{taskId}")
+    @PostMapping("/editTaskInfo/{taskId}")
     public String setTaskName(@PathVariable("taskId") Integer id,
                                TaskInfo taskInfo){
-        taskInfo.setId(id);
-        taskInfoService.save(taskInfo);
-        return "redirect:/allNames";
+        /*
+            Saving task with same id will override the previous value in database
+         */
+        taskInfoService.edit(id,taskInfo);
+        return "redirect:/allTaskInfo";
     }
 
 }

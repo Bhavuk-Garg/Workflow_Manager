@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class WorkflowController {
@@ -27,12 +28,15 @@ public class WorkflowController {
                                   Model model)
     {
         Workflow inspectedWorkflow=workflowService.findByName(workflowName);
+        /*
+            inspected workflow contains status and name of workflow which are used for front end rendering
+         */
         model.addAttribute("workflow",inspectedWorkflow);
-        model.addAttribute("workflowName",workflowName);
 
         List<Triple<LocalDateTime, TaskInfo,String>> formattedResult = outputFormatter.formatResult(inspectedWorkflow.getResult());
+        Map<Integer,LocalDateTime> triggerTimeMap=outputFormatter.createTriggerTimeMap(inspectedWorkflow.getTriggers());
         model.addAttribute("formattedResult", formattedResult);
-
+        model.addAttribute("triggerTimeMap",triggerTimeMap);
         return "workflowDetails";
     }
 

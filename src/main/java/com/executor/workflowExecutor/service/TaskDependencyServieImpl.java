@@ -17,7 +17,7 @@ public class TaskDependencyServieImpl implements TaskDependencyService{
     TaskDependencyRepository taskDependencyRepository;
 
     @Override
-    public void add(TaskDependencyDTO inputDTO) {
+    public void save(TaskDependencyDTO inputDTO) {
         validate(inputDTO);
         TaskDependency newDependency=createEntityFromDTO(inputDTO);
         taskDependencyRepository.save(newDependency);
@@ -30,7 +30,7 @@ public class TaskDependencyServieImpl implements TaskDependencyService{
         if(prevOccurances>0 )
             throw new RuntimeException("Edge exists between "+inputDTO.getFromTask()+" and "+inputDTO.getToTask() );
         else if(fromTask==toTask)
-            throw new RuntimeException("from and To should be different" );
+            throw new RuntimeException("from and To Tasks should be different" );
     }
 
 

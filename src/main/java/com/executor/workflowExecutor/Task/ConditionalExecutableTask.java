@@ -1,22 +1,28 @@
 package com.executor.workflowExecutor.Task;
 
+import com.executor.workflowExecutor.components.utility.Status;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Random;
 
-@Component("threadedTask")
+@Component("conditionalTask")
 @Scope("prototype")
-public class ThreadedTask extends Task{
+public class ConditionalExecutableTask extends ExecutableTask {
+
+    public ConditionalExecutableTask(List<String> outputs, Status type) {
+        super(outputs, type);
+    }
 
     @Override
     public String execute() {
         try {
-            Thread.sleep(3000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("Threaded Task Executed");
+        System.out.println("conditional task Executed");
         return generateOutput();
     }
 

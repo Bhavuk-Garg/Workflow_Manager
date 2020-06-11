@@ -16,22 +16,9 @@ public class ExecutionController {
     @Autowired
     ExecutionService executionService;
 
-    @Autowired
-    WorkflowService workflowService;
     @GetMapping("/triggerExecute/{name}")
     public String resumeTriggerWait(@PathVariable("name") String workflowName) throws InterruptedException {
-        Workflow workflow=workflowService.findByName(workflowName);
-        executionService.setStauts(workflow, Status.NORMAL);
-        executionService.resumeExecution(workflow,0);
-        return "redirect:/workflow/"+workflowName;
-    }
-
-    @GetMapping("/timedExecute/{name}")
-    public String resumeTimedWait(@PathVariable("name") String workflowName,
-                                  @RequestParam int time) throws InterruptedException {
-        Workflow workflow=workflowService.findByName(workflowName);
-        executionService.setStauts(workflow, Status.NORMAL);
-        executionService.resumeExecution(workflow,time*1000);
+        executionService.resumeExecution(workflowName);
         return "redirect:/workflow/"+workflowName;
     }
 }

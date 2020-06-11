@@ -5,16 +5,16 @@ import com.executor.workflowExecutor.service.TaskInfoService;
 import org.apache.commons.lang3.tuple.Triple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class OutputFormatter {
-    @Autowired
-    TaskInfoService taskInfoService;
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 
     public List<Triple<LocalDateTime , TaskInfo,String>> formatResult(String res) {
         List<Triple<LocalDateTime, TaskInfo, String>> formattedResult=new ArrayList<>();
@@ -24,27 +24,34 @@ public class OutputFormatter {
         for(String curExecutedTaskStatus: executedTaskStatusList)
         {
             /*
+                [time,id,name,type,output]
             *  curExecutedTaskStatus have values in format [completionTime,id,output]
             */
 
-            String []info=curExecutedTaskStatus.split(",");
-            String outputGenerated="";
-            if(info.length == 2)
-            {
-                /*
-                *  for output [date,id, ] blank field represents default ouput
-                *  split function will ignore the last field , so we are handling the case
-                */
-                outputGenerated="Default Output";
-            }
-            else
-                outputGenerated=info[2];
+            String []info=curExecutedTaskStatus.split(",",-1);
 
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-                TaskInfo taskInfo = taskInfoService.findById(Integer.parseInt(info[1]));
-                formattedResult.add(Triple.of(LocalDateTime.parse(info[0],dtf), taskInfo,outputGenerated));
+            TaskInfo taskInfo = new TaskInfo();
+            taskInfo.setId(Integer.parseInt(info[1]));
+            taskInfo.setName(info[2]);
+            taskInfo.setType( Status.valueOf(info[3]));
+
+            formattedResult.add(Triple.of(LocalDateTime.parse(info[0],dtf), taskInfo,info[4]));
         }
         return formattedResult;
     }
 
+    public Map<Integer, LocalDateTime> createTriggerTimeMap(String triggers) {
+        Map<Integer,LocalDateTime> map=new HashMap<>();
+        if(triggers==null || triggers.length()==0)  return map;
+        String []triggerList=triggers.split(";");
+        for(String trigger: triggerList){
+            if(trigger.length()>0)
+            {
+                int id=Integer.parseInt(trigger.split(",")[0]);
+                LocalDateTime time=LocalDateTime.parse(trigger.split(",")[1],dtf);
+                map.put(id,time);
+            }
+        }
+        return map;
+    }
 }

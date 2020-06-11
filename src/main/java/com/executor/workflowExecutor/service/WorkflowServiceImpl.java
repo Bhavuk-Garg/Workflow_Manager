@@ -14,11 +14,6 @@ import java.util.List;
 public class WorkflowServiceImpl implements WorkflowService {
     @Autowired
     WorkflowRepository workflowRepository;
-    @Autowired
-    ApplicationContext applicationContext;
-    @Autowired
-    ExecutionService executionService;
-
     @Override
     public void saveWorkflow(Workflow inputWorkflow){
             workflowRepository.save(inputWorkflow);
@@ -29,14 +24,6 @@ public class WorkflowServiceImpl implements WorkflowService {
         return workflowRepository.findAll(Sort.by("creationDate").descending());
     }
 
-    @Override
-    @Async
-    public void executeWorkflow(Workflow inputWorkflow)  {
-        DependencyGraph dependencyGraph=applicationContext.getBean("dependencyGraph",DependencyGraph.class);
-        String res=executionService.execute(1,inputWorkflow,dependencyGraph);
-        System.out.println("returned from execution service with :");
-        System.out.println(res);
-    }
 
     @Override
     public List<Workflow> findByNameLike(String name) {

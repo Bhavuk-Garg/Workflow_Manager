@@ -1,11 +1,14 @@
 package com.executor.workflowExecutor.components.dependencyGraph;
 
-import com.executor.workflowExecutor.Task.Task;
+import com.executor.workflowExecutor.Task.ExecutableTask;
+import com.executor.workflowExecutor.components.dependencyGraph.recovery.TaskRecovery;
 import com.executor.workflowExecutor.database.model.TaskDependency;
+import com.executor.workflowExecutor.database.repository.TaskDependencyRepository;
 import com.executor.workflowExecutor.service.TaskDependencyService;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -26,14 +29,14 @@ public class DependencyGraph {
 
     public TaskMapping taskMapping;
 
-    @Autowired
-    TaskDependencyService taskDependencyService;
+    @Autowired TaskDependencyRepository taskDependencyRepository;
+    @Autowired TaskRecovery taskRecovery;
 
     @PostConstruct
     void createGraph(){
         taskMapping =applicationContext.getBean("taskMapping",TaskMapping.class);
         System.out.println("here: "+taskMapping);
-        Iterable<TaskDependency> dependencies= taskDependencyService.getAll();
+        Iterable<TaskDependency> dependencies= taskDependencyRepository.findAll();
         for(TaskDependency dependency : dependencies)
         {
             int from=dependency.getFromTask().getId();
@@ -57,9 +60,14 @@ public class DependencyGraph {
         return adjList.get(node);
     }
 
-    public Task getTask(int id)
+    public ExecutableTask getTask(int id)
     {
         return taskMapping.getTask(id);
+    }
+
+
+    public TaskRecovery getTaskRecovery() {
+        return taskRecovery;
     }
 
 }

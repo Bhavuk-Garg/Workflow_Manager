@@ -10,7 +10,7 @@
 
     <div th:replace="fragments/common :: header"></div>
 
-    <div th:replace="fragments/form::taskDependencyForm"></div>
+    <div th:replace="fragments/form::taskDependencyForm(${taskDependencyDTO})"></div>
 
     <div th:replace="fragments/common:: footer"></div>
 </body>

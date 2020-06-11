@@ -17,9 +17,26 @@ public class Workflow {
 
     @Column(name="creation_date")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date creationDate=new Date();
+    Date creationDate=new Date();
+    @Column(columnDefinition="text")
     String result="";
+    String triggers="";
 
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public String getTriggers() {
+        return triggers;
+    }
+
+    public void setTriggers(String triggers) {
+        this.triggers = triggers;
+    }
 
     public Workflow(){}
     public Workflow(String name, Status status, String result) {

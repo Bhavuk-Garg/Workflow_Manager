@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/html">
 <head>
-    <META HTTP-EQUIV="refresh" CONTENT="3">
+    <META HTTP-EQUIV="refresh" CONTENT="10">
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" type="text/css"
@@ -15,9 +15,10 @@
     <div class="container">
 
             <div class="row justify-content-center">
-                <a class="p-3 m-2 bg-secondary text-white text-decoration-none" href="/allNames">Task Names</a>
-                <a class="p-3 m-2 bg-secondary text-white text-decoration-none" href="/allDependencies">Task Dependencies</a>
-             </div>
+                <a class="p-3 m-2 bg-secondary text-white text-decoration-none" th:href="@{/allTaskInfo}">Task Names</a>
+                <a class="p-3 m-2 bg-secondary text-white text-decoration-none" th:href="@{/allDependencies}">Task Dependencies</a>
+                <a class="p-3 m-2 bg-secondary text-white text-decoration-none" th:href="@{/allTaskWithTimeWait}">Time Wait Tasks</a>
+            </div>
 
 
             <form method="post">
@@ -37,7 +38,7 @@
             </div>
         </form>
 
-        <button class="btn btn-secondary" onClick="window.location.reload();"><i class="fas fa-sync-alt"></i></button>
+        <button class="btn btn-secondary mx-1" onClick="window.location.reload();"><i class="fas fa-sync-alt"></i></button>
 
         <table class="table table-hover table-striped">
             <thead>
@@ -55,7 +56,7 @@
                     <td th:switch="${workflow.status}">
                         <strong th:case="${T( com.executor.workflowExecutor.components.utility.Status).SUCCESS}" th:text="Success" class="text-success"></strong>
                         <strong th:case="${T( com.executor.workflowExecutor.components.utility.Status).FAILED}" th:text="Failed" class="text-danger"></strong>
-                        <strong th:case="${T( com.executor.workflowExecutor.components.utility.Status).TIMED_WAIT}" th:text="Timed_Wait" class="text-info"></strong>
+                        <strong th:case="${T( com.executor.workflowExecutor.components.utility.Status).TIME_WAIT}" th:text="Timed_Wait" class="text-info"></strong>
                         <strong th:case="${T( com.executor.workflowExecutor.components.utility.Status).TRIGGER_WAIT}" th:text="Trigger_Wait" style="color:purple;"></strong>
                         <strong th:case="*" th:text="Waiting" class="text-warning"></strong>
                     </td>

@@ -16,118 +16,169 @@
     <div th:replace="fragments/common :: header"></div>
     <div class="container">
 
-            <h1 th:text="${workflowName}" class="m-3 text-left"></h1>
+            <h1 th:text="${workflow.name}" class="m-3 text-left"></h1>
 
-            <div class="my-2 progress" style="height: 40px;" th:if="${workflow.status!=T(com.executor.workflowExecutor.components.utility.Status).SUCCESS
-                && workflow.status!=T(com.executor.workflowExecutor.components.utility.Status).FAILED}" >
-                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"  style="width: 100%">
-                    <div th:switch="${workflow.status}">
-                        <div th:case="${T(com.executor.workflowExecutor.components.utility.Status).TIME_WAIT}">
-                            It is a time Wait....
-                        </div>
-                        <div th:case="*">
-                            Waiting for Execution to complete ....
-                        </div>
-                    </div>
-                </div>
+            <div th:switch="${workflow.status}" class="my-2 progress" style="height: 40px;"
+                 th:if="${workflow.status!=T(com.executor.workflowExecutor.components.utility.Status).SUCCESS
+                        && workflow.status!=T(com.executor.workflowExecutor.components.utility.Status).FAILED}" >
+
+                            <div th:case="${T(com.executor.workflowExecutor.components.utility.Status).TIME_WAIT}"
+                                 class="progress-bar bg-warning progress-bar-striped progress-bar-animated" role="progressbar"
+                                 style="width: 100%">
+                               Waiting Task ....
+                            </div>
+
+                           <div th:case="${T(com.executor.workflowExecutor.components.utility.Status).TRIGGER_WAIT}"
+                                class="progress-bar bg-info progress-bar-striped progress-bar-animated" role="progressbar"
+                                style="width: 100%">
+                                   Click On Trigger to Continue
+                           </div>
+
+                            <div th:case="*" class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar"  style="width: 100%">
+                                Executing Task...
+                            </div>
             </div>
 
 <!--        show first n-1 outputs-->
         <table class="table">
             <tbody>
-                <div th:each="result : ${formattedResult}" th:if="${resultStat.count<formattedResult.size()}">
-                        <tr class="table-success">
+                <div th:each="result : ${formattedResult}">
+
+<!--                    Last Value Case-->
+                    <div th:if="${resultStat.count==formattedResult.size() &&
+                    ( workflow.status==T(com.executor.workflowExecutor.components.utility.Status).SUCCESS ||  workflow.status==T(com.executor.workflowExecutor.components.utility.Status).FAILED)}">
+                        <tr th:classappend="${workflow.status==T(com.executor.workflowExecutor.components.utility.Status).SUCCESS} ? 'bg-success' : 'bg-danger'">
                             <td>
                                 <span th:text="${result.getLeft().toLocalDate()}"/><br/>
                                 <span th:text="${result.getLeft().toLocalTime()}"/>
                             </td>
-                            <td th:text="'Task '+${result.getMiddle().getId()+' : '+result.getMiddle().getName()}+' Executed'"></td>
-                            <td th:text="${'Output : '+  result.getRight()}"></td>
-                        </tr>
-
-                        <tr class="table-dark" th:if="${result.getMiddle().getType() == T(com.executor.workflowExecutor.components.utility.Status).TRIGGER_WAIT ||
-                                result.getMiddle().getType()==T(com.executor.workflowExecutor.components.utility.Status).TIME_WAIT}">
-                            <td>Trigger Accepted</td>
-                            <td></td>
+                            <td th:text="'Task '+${result.getMiddle().getId()+' : '+result.getMiddle().getName()}+${workflow.status==T(com.executor.workflowExecutor.components.utility.Status).SUCCESS? ' Finshed Successfully':' Failed'}"></td>
                             <td></td>
                         </tr>
+                    </div>
+                    <div th:unless="${resultStat.count==formattedResult.size() &&
+                    ( workflow.status==T(com.executor.workflowExecutor.components.utility.Status).SUCCESS ||  workflow.status==T(com.executor.workflowExecutor.components.utility.Status).FAILED)}"
+                         th:switch="${result.getMiddle().getType()}">
 
-                    <tr th:if="${resultStat.count<formattedResult.size()}" class="bg-warning">
-                        <td>
-                            <span th:text="${result.getLeft().toLocalDate()}"/><br/>
-                            <span th:text="${result.getLeft().toLocalTime()}"/>
-                        </td>
-                        <td th:text="${result.getMiddle().getId()+'->'+formattedResult.get(__${resultStat.index+1}__).getMiddle().getId()}"></td>
-                        <td></td>
-                    </tr>
+                            <div th:if="${result.getRight()==''}">
+                                <tr class="bg-danger" >
+                                    <td th:text="${'Task : '+result.getMiddle().getId()}"></td>
+                                    <td>Failed</td>
+                                    <td></td>
+                                </tr>
+                                <tr class="bg-info" >
+                                    <td>
+                                        Retrying ...
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </div>
+
+                           <div th:unless="${result.getRight()==''}">
+                                <div th:case="${T(com.executor.workflowExecutor.components.utility.Status).TIME_WAIT}">
+                                    <tr class="bg-info" >
+                                        <td>
+                                            Waiting for Timed Task to Complete ...
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr class="bg-info">
+                                        <td>
+                                            <span th:text="${result.getLeft().toLocalDate()}"/><br/>
+                                            <span th:text="${result.getLeft().toLocalTime()}"/>
+                                        </td>
+                                        <td>Waiting Completed for Task: <span th:text="${result.getMiddle().getId()}"></span></td>
+                                        <td></td>
+                                    </tr>
+                                </div>
+
+                                <div th:case="${T(com.executor.workflowExecutor.components.utility.Status).TRIGGER_WAIT}">
+            <!--                        First Show the output-->
+                                    <tr class="table-success">
+                                        <td>
+                                            <span th:text="${result.getLeft().toLocalDate()}"/><br/>
+                                            <span th:text="${result.getLeft().toLocalTime()}"/>
+                                        </td>
+                                        <td th:text="'Task '+${result.getMiddle().getId()+' : '+result.getMiddle().getName()}+' Executed'"></td>
+                                        <td th:text="${'Output : '+  result.getRight()}"></td>
+                                    </tr>
+            <!--                        Then act like it was waiting for trigger-->
+                                    <tr class="bg-info">
+                                        <td>
+                                            Waiting for Update ...
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+            <!--                        Now Finally show the time of trigger by using the map-->
+                                    <tr class="bg-info" th:if="${triggerTimeMap.get(__${result.getMiddle().getId()}__)!=null}" th:object="${triggerTimeMap.get(__${result.getMiddle().getId()}__)}">
+                                        <td>
+                                            <span th:text="*{toLocalDate()}"></span><br>
+                                            <span th:text="*{toLocalTime()}"></span>
+                                        </td>
+                                        <td>Update Recieved</td>
+                                        <td></td>
+                                    </tr>
+<!--                                    Then act like there was a transition-->
+                                    <tr class="bg-warning" th:if="${resultStat.count<formattedResult.size() && triggerTimeMap.get(__${result.getMiddle().getId()}__)!=null}"
+                                         th:object="${triggerTimeMap.get(__${result.getMiddle().getId()}__)}">
+                                        <td>
+                                            <span th:text="*{toLocalDate()}"></span><br>
+                                            <span th:text="*{toLocalTime()}"></span>
+                                        </td>
+                                        <td th:text="${result.getMiddle().getId()+'->'+formattedResult.get(__${resultStat.index+1}__).getMiddle().getId()}"></td>
+                                        <td></td>
+                                    </tr>
+                                </div>
+
+                                <div th:case="${T(com.executor.workflowExecutor.components.utility.Status).NORMAL}">
+<!--                                    show Normal Execution Result-->
+                                    <tr class="table-success">
+                                        <td>
+                                            <span th:text="${result.getLeft().toLocalDate()}"/><br/>
+                                            <span th:text="${result.getLeft().toLocalTime()}"/>
+                                        </td>
+                                        <td th:text="'Task '+${result.getMiddle().getId()+' : '+result.getMiddle().getName()}+' Executed'"></td>
+                                        <td th:text="${'Output : '+  result.getRight()}"></td>
+                                    </tr>
+<!--                                    act like there was a transition-->
+                                    <tr class="bg-warning" th:if="${resultStat.count<formattedResult.size()}">
+                                        <td>
+                                            <span th:text="${result.getLeft().toLocalDate()}"/><br/>
+                                            <span th:text="${result.getLeft().toLocalTime()}"/>
+                                        </td>
+                                        <td th:text="${result.getMiddle().getId()+'->'+formattedResult.get(__${resultStat.index+1}__).getMiddle().getId()}"></td>
+                                        <td></td>
+                                    </tr>
+                                </div>
+                           </div>
+                    </div>
                 </div>
             </tbody>
 
 
 <!--            formatting for the last output-->
-            <tfoot th:switch="${workflow.status}" th:if="${formattedResult.size()>0}">
-                <tr th:case="${T(com.executor.workflowExecutor.components.utility.Status).SUCCESS}"
-                    class="bg-success" th:object="${formattedResult.get(formattedResult.size()-1)}">
-                    <td>
-                        <span th:text="*{getLeft().toLocalDate()}"/><br/>
-                        <span th:text="*{getLeft().toLocalTime()}"/>
-                    </td>
-                    <td th:text="'Task '+*{getMiddle().getId()}+' : '+*{getMiddle().getName()}+' Executed'"></td>
-                    <td></td>
-                </tr>
-                <tr th:case="${T(com.executor.workflowExecutor.components.utility.Status).FAILED}"
-                    class="bg-danger" th:object="${formattedResult.get(formattedResult.size()-1)}">
-                    <td>
-                        <span th:text="*{getLeft().toLocalDate()}"/><br/>
-                        <span th:text="*{getLeft().toLocalTime()}"/>
-                    </td>
-                    <td th:text="'Task '+*{getMiddle().getId()}+' : '+*{getMiddle().getName()}+' Executed'"></td>
-                    <td></td>
-                </tr>
-                    <div th:case="*" th:object="${formattedResult.get(formattedResult.size()-1)}">
-                        <tr class="table-success">
-                            <td>
-                                <span th:text="*{getLeft().toLocalDate()}"/><br/>
-                                <span th:text="*{getLeft().toLocalTime()}"/>
-                            </td>
-                            <td th:text="'Task '+*{getMiddle().getId()}+' : '+*{getMiddle().getName()}+' Executed'"></td>
-                            <td th:text="${'Output : '+  #object.getRight() }"></td>
-                        </tr>
-                        <tr class="table-dark" th:object="${formattedResult.get(formattedResult.size()-1)}"
-                            th:if="${workflow.status==T(com.executor.workflowExecutor.components.utility.Status).NORMAL &&
-                            (#object.getMiddle().getType()==T(com.executor.workflowExecutor.components.utility.Status).TRIGGER_WAIT
-                            || #object.getMiddle().getType()==T(com.executor.workflowExecutor.components.utility.Status).TIME_WAIT)
-                            }">
-                            <td>Trigger Accepted</td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                </div>
-            </tfoot>
+            <tfoot th:switch="${workflow.status}" >
 
+                <tr th:case="${T(com.executor.workflowExecutor.components.utility.Status).TIME_WAIT}" class="bg-info" >
+                    <td>
+                        Waiting for Timed Task to Complete ...
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tfoot>
         </table>
 
 
-<!--        show inputs in case-->
-        <div th:switch="${workflow.status}">
-                <div th:case="${T(com.executor.workflowExecutor.components.utility.Status).TRIGGER_WAIT}">
-                    <a th:href="@{'/triggerExecute/'+${workflowName} }" class="bg-success text-white p-3 text-decoration-none my-2">
-                        Trigger
-                    </a>
-                </div>
-<!--            <div th:case="${T(com.executor.workflowExecutor.components.utility.Status).TIME_WAIT}">-->
-<!--                <form method="get" th:action="@{'/timedExecute/'+${workflowName} }">-->
-<!--                    <div class="form-row">-->
-<!--                        <div class="col-md-3">-->
-<!--                            <input class="form-control" type="number" name="time" placeholder="Enter time in seconds"/>-->
-<!--                        </div>-->
-<!--                        <button type="submit" class="btn btn-primary">Trigger</button>-->
-<!--                    </div>-->
-<!--                </form>-->
-<!--            </div>-->
+<!--        Provide a Trigger It status is TriggerWait-->
+        <div th:if="${workflow.status==T(com.executor.workflowExecutor.components.utility.Status).TRIGGER_WAIT}">
+                <a th:href="@{'/triggerExecute/'+${workflow.name} }" class="bg-success text-white p-3 text-decoration-none my-2">
+                    Update
+                </a>
         </div>
-
-
     </div>
 </body>
 </html>

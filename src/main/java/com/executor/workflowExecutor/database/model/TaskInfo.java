@@ -21,7 +21,7 @@ public class TaskInfo {
     private Status type;
 
     @Column(name="time")
-    int time=5;
+    int time=20;
 
     public int getTime() {
         return time;

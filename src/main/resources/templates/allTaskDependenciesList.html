@@ -9,7 +9,7 @@
 <body>
 
     <div th:replace="fragments/common :: header"></div>
-    <div th:replace="fragments/form::taskDependencyForm"></div>
+    <div th:replace="fragments/form::taskDependencyForm(${taskDependencyDTO})"></div>
 
 
     <div class="container text-white text-center">
@@ -19,7 +19,7 @@
             <div class="col col-sm-2 p-3 m-2 bg-primary">OUTPUT</div>
             <div class="col col-sm-2 p-3 m-2 bg-primary">TO TASK</div>
         </div>
-        <div class="row" th:each="dependency: ${dependencies}">
+        <div class="row" th:each="dependency: ${allDependencies}">
             <div class="col col-sm-2 p-3 m-2 bg-info" th:text="${dependency.id}"></div>
             <div class="col col-sm-2 p-3 m-2 bg-info" th:text="${dependency.fromTask.id}"></div>
             <div class="col col-sm-2 p-3 m-2 bg-info" th:text="${dependency.output}"></div>

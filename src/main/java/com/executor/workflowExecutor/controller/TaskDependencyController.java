@@ -27,18 +27,18 @@ public class TaskDependencyController {
 
     @GetMapping("/allDependencies")
     public String showDependencies(Model model){
-        model.addAttribute("dependencies" ,taskDependencyService.getAll());
-        return "taskDependenciesList";
+        model.addAttribute("allDependencies" ,taskDependencyService.getAll());
+        return "allTaskDependenciesList";
     }
 
     @PostMapping("/allDependencies")
     public String addDependency(@Valid TaskDependencyDTO taskDependencyDTO, BindingResult bindingResult, Model model){
         //If DTO object is not valid return same page
         if(bindingResult.hasErrors()) {
-            model.addAttribute("dependencies", taskDependencyService.getAll());
+                model.addAttribute("dependencies", taskDependencyService.getAll());
                 return "taskDependenciesList";
             }
-        taskDependencyService.add(taskDependencyDTO);
+        taskDependencyService.save(taskDependencyDTO);
         return "redirect:/allDependencies";
     }
 

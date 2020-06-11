@@ -10,19 +10,19 @@
 
     <div th:replace="fragments/common :: header"></div>
 
-    <div th:insert="fragments/form:: taskInfoForm"></div>
+    <div th:replace="fragments/form:: taskInfoInputForm(${availableTaskNames},${inputTaskInfo})"></div>
 
-<div class="container">
+    <div class="container">
         <div class="row">
             <div class="col-3 p-3 m-2 bg-primary text-white">Task ID</div>
             <div class="col-3 p-3 m-2 bg-primary text-white">Task Name</div>
             <div class="col-3 p-3 m-2 bg-primary text-white">Task Type</div>
         </div>
-        <div class="row align-items-center" th:each="task: ${availableTaskNames}" >
-                <div class="col-3 p-3 m-2 bg-info text-white"><span th:text="${task.id}"></span></div>
-                <div class="col-3 p-3 m-2 bg-info text-white"><span th:text="${task.name}"></span></div>
-                <div class="col-3 p-3 m-2 bg-info text-white"><span th:text="${task.type}"></span></div>
-            <a class="p-3 m-2 bg-warning text-decoration-none" th:href="@{'/editTaskName/'+${task.id}}">Edit</a>
+        <div class="row align-items-center" th:each="taskInfo: ${allTaskInfo}" >
+                <div class="col-3 p-3 m-2 bg-info text-white"><span th:text="${taskInfo.id}"></span></div>
+                <div class="col-3 p-3 m-2 bg-info text-white"><span th:text="${taskInfo.name}"></span></div>
+                <div class="col-3 p-3 m-2 bg-info text-white"><span th:text="${taskInfo.type}"></span></div>
+            <a class="p-3 m-2 bg-warning text-decoration-none" th:href="@{'/editTaskInfo/'+${taskInfo.id}}">Edit</a>
         </div>
 
     </div>

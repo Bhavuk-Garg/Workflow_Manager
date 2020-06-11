@@ -14,7 +14,7 @@
             <div class="col col-4 p-3 m-2 bg-primary text-white">Task ID</div>
             <div class="col col-4 p-3 m-2 bg-primary text-white">Wait Time(seconds)</div>
         </div>
-        <div class="row align-items-center"  th:each="task : ${obj}">
+        <div class="row align-items-center"  th:each="task : ${allTimeWaitTaskInfo}">
             <div class="col col-4 p-3 m-2 bg-info text-white" th:text="${task.id}"></div>
 
             <form class="form-row col col-4" method="post" th:action="@{'/changeTime/'+${task.id}}">

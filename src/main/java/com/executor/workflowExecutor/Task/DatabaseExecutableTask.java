@@ -1,22 +1,28 @@
 package com.executor.workflowExecutor.Task;
 
+import com.executor.workflowExecutor.components.utility.Status;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Random;
 
-@Component("conditionalTask")
+@Component("dataTask")
 @Scope("prototype")
-public class ConditionalTask extends Task {
+public class DatabaseExecutableTask extends ExecutableTask {
+
+    public DatabaseExecutableTask(List<String> outputs, Status type) {
+        super(outputs, type);
+    }
 
     @Override
     public String execute() {
         try {
-            Thread.sleep(5000);
+            Thread.sleep(6000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("conditional task Executed");
+        System.out.println("DataBase Task Executed");
         return generateOutput();
     }
 
@@ -30,4 +36,5 @@ public class ConditionalTask extends Task {
         int idx=random.nextInt(outputs.size());
         return outputs.get(idx);
     };
+
 }

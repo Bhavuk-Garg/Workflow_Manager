@@ -1,6 +1,7 @@
 package com.executor.workflowExecutor.components.dependencyGraph;
 
-import com.executor.workflowExecutor.Task.Task;
+import com.executor.workflowExecutor.Task.Executable;
+import com.executor.workflowExecutor.Task.ExecutableTask;
 import com.executor.workflowExecutor.Task.decorator.TimeDecorator;
 import com.executor.workflowExecutor.components.utility.Status;
 import com.executor.workflowExecutor.database.model.TaskDependency;
@@ -25,25 +26,28 @@ public class TaskFactory {
     @Autowired
     ApplicationContext applicationContext;
 
-    public Task createTask(int id)
+    public ExecutableTask createTask(int id)
     {
         /*
-         *   Load all dependent tasks and set possible outputs
-         */
+         *   Load all dependent tasks and fetch possible outputs
+        */
         List<TaskDependency> dependencies= taskDependencyService.findByFromId(id);
         List<String> outputs=dependencies.stream().map(dependency-> dependency.getOutput()).collect(Collectors.toList());
 
-        TaskInfo curTaskInfo=taskInfoService.findById(id);
-        Task reqTask=applicationContext.getBean(curTaskInfo.getName(),Task.class);
-        reqTask.setOutputs(outputs);
-        reqTask.setType(curTaskInfo.getType());
-        System.out.println("Set the type of id: "+id+" to "+curTaskInfo.getType());
-        if(curTaskInfo.getType()== Status.TIME_WAIT)
+        /*
+         *   info holds [id,name,type,time]. We will use it to get name and type, then set these fields in Executable Task
+         */
+        TaskInfo currentTaskInfo=taskInfoService.findById(id);
+
+        ExecutableTask newExecutableTask =(ExecutableTask) applicationContext.getBean(currentTaskInfo.getName(),outputs,currentTaskInfo.getType());
+
+        if(currentTaskInfo.getType()== Status.TIME_WAIT)
         {
-            TimeDecorator wrappedTask=new TimeDecorator(reqTask);
-            wrappedTask.setTime(curTaskInfo.getTime()*1000);
-            return wrappedTask;
+            TimeDecorator newDecoratedExecutableTask=new TimeDecorator(newExecutableTask);
+//            System.out.println("DecoratedTask made: "+newDecoratedExecutableTask);
+            newDecoratedExecutableTask.setTime(currentTaskInfo.getTime());
+            return newDecoratedExecutableTask;
         }
-        return reqTask;
+        return newExecutableTask;
     }
 }

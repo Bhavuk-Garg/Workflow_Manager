@@ -1,26 +1,33 @@
 package com.executor.workflowExecutor.Task;
 
+import com.executor.workflowExecutor.components.utility.Status;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Random;
 
-@Component("syncTask")
+@Component("printTask")
 @Scope("prototype")
-public class SyncTask extends Task {
+public class PrintExecutableTask extends ExecutableTask {
 
-    @Override
-    public String execute() {
+    public PrintExecutableTask(List<String> outputs, Status type) {
+        super(outputs, type);
+    }
+
+    public String execute()
+    {
         try {
-            Thread.sleep(3000);
+            Thread.sleep(4000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("Sync Task Executed");
+        System.out.println("print task executed");
         return generateOutput();
     }
 
     private String generateOutput() {
+//        throw new RuntimeException();
         if(outputs.size()==0)   return null;
         Random random=new Random();
         int randomVal=random.nextInt(outputs.size()+1);
@@ -29,5 +36,5 @@ public class SyncTask extends Task {
 
         int idx=random.nextInt(outputs.size());
         return outputs.get(idx);
-    };
+    }
 }

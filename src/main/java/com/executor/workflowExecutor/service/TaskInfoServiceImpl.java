@@ -29,4 +29,14 @@ public class TaskInfoServiceImpl implements TaskInfoService {
         return taskInfoRepository.findById(id).orElse(null);
     }
 
+    @Override
+    public void edit(Integer id, TaskInfo taskInfo) {
+        taskInfo.setId(id);
+        taskInfoRepository.save(taskInfo);
+    }
+
+    @Override
+    public Iterable<TaskInfo> findByType(Status type) {
+        return taskInfoRepository.findByType(type);
+    }
 }
