@@ -20,3 +20,14 @@ ASFT as an org has orchestrator systems which interacts with multiple other serv
 ```
 <img align="right" width="300" src="assets/graphImage.jpg" alt="graph Image" />
 
+### This represents a directed acyclic graph
+
+1. Dummy Task Implementations are used in the project as follows:
+    * printTask
+    * dataTask
+    * syncTask ...
+    
+2. It have three types of tasks :
+    1. Normal : After normal Execution generates an output
+    2. Trigger Wait : Halts Execution until a trigger is pressed
+    3. Time Wait : Sole purpose is to add delay between execution of two tasks 
