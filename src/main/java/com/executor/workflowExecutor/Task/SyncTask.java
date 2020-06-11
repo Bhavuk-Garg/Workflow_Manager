@@ -9,9 +9,9 @@ import java.util.Random;
 
 @Component("syncTask")
 @Scope("prototype")
-public class SyncExecutableTask extends ExecutableTask {
+public class SyncTask extends ExecutableTask {
 
-    public SyncExecutableTask(List<String> outputs, Status type) {
+    public SyncTask(List<String> outputs, Status type) {
         super(outputs, type);
     }
 

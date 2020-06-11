@@ -7,27 +7,26 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Random;
 
-@Component("printTask")
+@Component("threadedTask")
 @Scope("prototype")
-public class PrintExecutableTask extends ExecutableTask {
+public class ThreadedTask extends ExecutableTask {
 
-    public PrintExecutableTask(List<String> outputs, Status type) {
+    public ThreadedTask(List<String> outputs, Status type) {
         super(outputs, type);
     }
 
-    public String execute()
-    {
+    @Override
+    public String execute() {
         try {
-            Thread.sleep(4000);
+            Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("print task executed");
+        System.out.println("Threaded Task Executed");
         return generateOutput();
     }
 
     private String generateOutput() {
-//        throw new RuntimeException();
         if(outputs.size()==0)   return null;
         Random random=new Random();
         int randomVal=random.nextInt(outputs.size()+1);
@@ -36,5 +35,5 @@ public class PrintExecutableTask extends ExecutableTask {
 
         int idx=random.nextInt(outputs.size());
         return outputs.get(idx);
-    }
+    };
 }

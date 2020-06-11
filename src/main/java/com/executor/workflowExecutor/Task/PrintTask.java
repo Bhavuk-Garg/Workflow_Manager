@@ -7,22 +7,22 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Random;
 
-@Component("dataTask")
+@Component("printTask")
 @Scope("prototype")
-public class DatabaseExecutableTask extends ExecutableTask {
+public class PrintTask extends ExecutableTask {
 
-    public DatabaseExecutableTask(List<String> outputs, Status type) {
+    public PrintTask(List<String> outputs, Status type) {
         super(outputs, type);
     }
 
-    @Override
-    public String execute() {
+    public String execute()
+    {
         try {
-            Thread.sleep(6000);
+            Thread.sleep(4000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("DataBase Task Executed");
+        System.out.println("print task executed");
         return generateOutput();
     }
 
@@ -35,6 +35,5 @@ public class DatabaseExecutableTask extends ExecutableTask {
 
         int idx=random.nextInt(outputs.size());
         return outputs.get(idx);
-    };
-
+    }
 }

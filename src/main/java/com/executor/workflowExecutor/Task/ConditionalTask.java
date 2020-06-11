@@ -7,22 +7,22 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Random;
 
-@Component("threadedTask")
+@Component("conditionalTask")
 @Scope("prototype")
-public class ThreadedExecutableTask extends ExecutableTask {
+public class ConditionalTask extends ExecutableTask {
 
-    public ThreadedExecutableTask(List<String> outputs, Status type) {
+    public ConditionalTask(List<String> outputs, Status type) {
         super(outputs, type);
     }
 
     @Override
     public String execute() {
         try {
-            Thread.sleep(3000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("Threaded Task Executed");
+        System.out.println("conditional task Executed");
         return generateOutput();
     }
 

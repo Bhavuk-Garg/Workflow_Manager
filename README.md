@@ -31,3 +31,17 @@ ASFT as an org has orchestrator systems which interacts with multiple other serv
     1. Normal : After normal Execution generates an output
     2. Trigger Wait : Halts Execution until a trigger is pressed
     3. Time Wait : Sole purpose is to add delay between execution of two tasks 
+
+## Technology Stack
+* Back End
+    * Java
+    * Spring Boot Web (MVC Framework)
+* Front End
+    * Bootstrap
+    * Thymeleaf Template Engine
+* Database
+    * Mysql
+    
+##Database Model of Project
+
+<img align="center" width="300" src="assets/tablesImage.jpg" alt="table Image" />
