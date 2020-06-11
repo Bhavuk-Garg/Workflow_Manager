@@ -74,8 +74,6 @@ that generate a `String output` because every task implements executable interfa
 Decorator design pattern adds dynamic functionality to an object at runtime. So we use it to add pauseExecution() functionality to the object.
 
 ## Handling Failed Tasks
-```text
-Recovery Mechanism is defined on the graph level. Graph bean will hold instance of recovery mechanism. It defines number of attemps and exponent
-of waiting. When we call recover method, It will count number of previous failures. If count of previous fails is more than maxAttemps
-then we declare workflow to FAILED status, else we try execution from same point again.
-```
+
+Recovery Mechanism is defined on the graph level. Graph bean will hold instance of recovery mechanism. It defines number of attemps and exponent of waiting. When we call recover method, It will count number of previous failures. If count of previous fails is more than maxAttempsthen we declare workflow to FAILED status, else we try execution from same point again.
+
