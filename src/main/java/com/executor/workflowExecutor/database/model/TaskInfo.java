@@ -5,7 +5,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name="task_name")
+@Table(name="task_info")
 public class TaskInfo {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
