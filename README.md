@@ -60,7 +60,7 @@ Decorator design pattern adds dynamic functionality to an object at runtime. So 
 <img align="center" src="assets/taskMapping.jpg" alt="graph structure"/>
 
 Adjacency List is used to create graph. First I fetch all dependencies, then use Map data structure to map each task id to its adjacent task id along 
-with corresponding output, so it is constructed like `Map<Integer,List<Pair\<Integer,String>>>` . A TaskMapping is maintained to associate Task Instances with their
+with corresponding output, so it is constructed like `Map<Integer,List<Pair<Integer,String>>>` . A TaskMapping is maintained to associate Task Instances with their
 id like `Map<Integer,Task>` . Graph is also provided with a recovery mechanism which defines the number of retries and exponent for wait.
 
 ## Executing workflow
