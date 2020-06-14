@@ -2,9 +2,7 @@ package com.executor.workflowExecutor.service;
 
 import com.executor.workflowExecutor.components.utility.Status;
 import com.executor.workflowExecutor.database.model.TaskInfo;
-import com.executor.workflowExecutor.database.model.TimedWaitTasks;
 import com.executor.workflowExecutor.database.repository.TaskInfoRepository;
-import com.executor.workflowExecutor.database.repository.TimedWaitTasksRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
