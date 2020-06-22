@@ -81,3 +81,9 @@ that generate a `String output` because every task implements executable interfa
 
 Recovery Mechanism is defined on the graph level. Graph bean will hold instance of recovery mechanism. It defines number of attemps and exponent of waiting. When we call recover method, It will count number of previous failures. If count of previous fails is more than maxAttempsthen we declare workflow to FAILED status, else we try execution from same point again.
 
+## Server Sent Events
+
+HTTP Connection is meant for only one transaction, It breaks the connection after serving response. So to render
+the home page in realtime SSE is used, which establishes unidirectional connection between client and server. This
+connection is used by server to push new notifications to the client. So page will not refresh to recieve updates 
+from the server

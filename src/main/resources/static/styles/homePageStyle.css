@@ -1,0 +1,22 @@
+.status{
+     font-weight: bold;
+     font-style: italic;
+}
+.SUCCESS{
+    color: darkgreen;
+}
+
+.FAILED{
+    color: crimson;
+}
+
+.TIME_WAIT{
+    color: gold;
+}
+
+.TRIGGER_WAIT{
+    color: gold;
+}
+.NORMAL{
+    color: lightblue;
+}

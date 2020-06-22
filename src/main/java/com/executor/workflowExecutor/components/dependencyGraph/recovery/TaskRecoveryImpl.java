@@ -16,18 +16,20 @@ public class TaskRecoveryImpl implements TaskRecovery {
     @Autowired ExecutionHelper executionHelper;
     @Autowired WorkflowRepository workflowRepository;
     @Override
-    public void recover(int id,Workflow workflow, DependencyGraph dependencyGraph) {
+    public boolean recover(int id,Workflow workflow, DependencyGraph dependencyGraph) {
         //Give it one more shot
         int prevFailures=countPreviousFailedTasks(workflow);
         if( prevFailures < maxAttempts)
         {
             exponentialWaiting(prevFailures);
-           executionHelper.execute(id,workflow,dependencyGraph);
+                executionHelper.execute(id,workflow,dependencyGraph);
+           return true;
         }
-        else {
-            workflow.setStatus(Status.FAILED);
-            workflowRepository.save(workflow);
-        }
+        return false;
+//        else {
+//            workflow.setStatus(Status.FAILED);
+//            workflowRepository.save(workflow);
+//        }
     }
 
     private void exponentialWaiting(int n) {

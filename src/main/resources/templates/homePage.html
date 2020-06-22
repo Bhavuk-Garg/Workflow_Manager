@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/html">
 <head>
-    <META HTTP-EQUIV="refresh" CONTENT="10">
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" type="text/css"
           href="/webjars/bootstrap/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/webjars/font-awesome/css/all.min.css"/>
+    <script type="text/javascript" th:src="@{/js/homePageScript.js}"></script>
+    <link rel="stylesheet" th:href="@{styles/homePageStyle.css}"/>
 </head>
 <body>
 
@@ -50,18 +51,13 @@
                 </tr>
             </thead>
             <tbody>
-                <tr  th:each="workflow,status : ${savedWorkflows}">
+                <tr  th:each="workflow,status : ${savedWorkflows}" th:id="${workflow.name}">
                     <th scope="row" th:text="${status.count}">#</th>
-                    <td th:text="${workflow.name}"></td>
-                    <td th:switch="${workflow.status}">
-                        <strong th:case="${T( com.executor.workflowExecutor.components.utility.Status).SUCCESS}" th:text="Success" class="text-success"></strong>
-                        <strong th:case="${T( com.executor.workflowExecutor.components.utility.Status).FAILED}" th:text="Failed" class="text-danger"></strong>
-                        <strong th:case="${T( com.executor.workflowExecutor.components.utility.Status).TIME_WAIT}" th:text="Timed_Wait" class="text-info"></strong>
-                        <strong th:case="${T( com.executor.workflowExecutor.components.utility.Status).TRIGGER_WAIT}" th:text="Trigger_Wait" style="color:purple;"></strong>
-                        <strong th:case="*" th:text="Waiting" class="text-warning"></strong>
+                    <td class="name" th:text="${workflow.name}"></td>
+                    <td class="status" th:text="${workflow.status}" th:classappend="${workflow.status}">
                     </td>
                     <td><a class="text-decoration-none" th:href="@{'/workflow/'+${workflow.name}}">link</a></td>
-                </tr>
+                     </tr>
             </tbody>
         </table>
 

@@ -5,5 +5,5 @@ import com.executor.workflowExecutor.database.model.Workflow;
 
 
 public interface TaskRecovery {
-    void recover(int id, Workflow workflow, DependencyGraph dependencyGraph);
+    boolean recover(int id, Workflow workflow, DependencyGraph dependencyGraph);
 }

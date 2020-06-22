@@ -5,10 +5,11 @@ import com.executor.workflowExecutor.components.dependencyGraph.DependencyGraph;
 import com.executor.workflowExecutor.database.model.TaskInfo;
 import com.executor.workflowExecutor.database.model.Workflow;
 import com.executor.workflowExecutor.database.repository.WorkflowRepository;
+import com.executor.workflowExecutor.eventListeners.event.WorkflowStatusChangeEvent;
 import com.executor.workflowExecutor.service.TaskInfoService;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,7 @@ import java.util.List;
 public class ExecutionHelper {
     @Autowired WorkflowRepository workflowRepository;
     @Autowired TaskInfoService taskInfoService;
+    @Autowired ApplicationEventPublisher eventPublisher;
 
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 
@@ -74,7 +76,11 @@ public class ExecutionHelper {
 //            e.printStackTrace();
             String result=dtf.format(LocalDateTime.now())+","+curTaskId+","+taskName+","+type+","+""+";";
             appendResult(inputWorkflow,result);
-            dependencyGraph.getTaskRecovery().recover(curTaskId,inputWorkflow,dependencyGraph);
+            boolean retried=dependencyGraph.getTaskRecovery().recover(curTaskId,inputWorkflow,dependencyGraph);
+            if(retried==false)
+            {
+                setStatus(inputWorkflow,Status.FAILED);
+            }
         }
 
     }
@@ -82,16 +88,19 @@ public class ExecutionHelper {
 
 
 
-    private void updateWorkflow(Workflow inputWorkflow, String result, Status status) {
-        inputWorkflow.setResult(inputWorkflow.getResult()+result);
-        inputWorkflow.setStatus(status);
-        workflowRepository.save(inputWorkflow);
+    private void updateWorkflow(Workflow workflow, String result, Status status) {
+        workflow.setResult(workflow.getResult()+result);
+        workflow.setStatus(status);
+        workflowRepository.save(workflow);
+
+        eventPublisher.publishEvent(new WorkflowStatusChangeEvent(this,workflow));
     }
 
     public void setStatus(Workflow workflow,Status status)
     {
         workflow.setStatus(status);
         workflowRepository.save(workflow);
+        eventPublisher.publishEvent(new WorkflowStatusChangeEvent(this,workflow));
     }
     public void appendResult(Workflow workflow,String result)
     {
